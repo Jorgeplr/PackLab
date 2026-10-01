@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat+Alternates:wght@600&family=Nunito:wght@400;600;700;800&family=Pacifico&family=Playfair+Display:wght@700&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+  </script>
+  <title>Iniciar sesión · PackLab</title>
+</head>
+<body>
+  <main class="auth-page">
+    <div class="auth-card card">
+      <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
+      <h1 data-title>Bienvenido a PackLab</h1>
+      <p class="sub" data-sub>Inicia sesión para acceder a todas las herramientas y comienza a diseñar tus empaques.</p>
+      <div class="alert alert-error hidden" data-error></div>
+      <form data-form novalidate>
+        <div class="field hidden" data-name-field>
+          <label for="name">Nombre o emprendimiento</label>
+          <input class="input" id="name" name="name" autocomplete="name" placeholder="Ej. Dulces Doña Rosa">
+        </div>
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" required>
+        </div>
+        <div class="field">
+          <label for="password">Contraseña</label>
+          <div class="input-group">
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6">
+            <button type="button" class="icon-btn" data-show-pass aria-label="Mostrar contraseña"></button>
+          </div>
+        </div>
+        <button class="btn btn-dark btn-block btn-lg" type="submit" data-submit>Iniciar sesión</button>
+      </form>
+      <div class="divider">o</div>
+      <button class="btn btn-outline btn-block" data-switch>Crear una cuenta</button>
+      <p class="demo-hint">Cuenta de prueba: <span class="mono">demo@packlab.com</span> / <span class="mono">packlab123</span></p>
+    </div>
+  </main>
+  <script type="module" src="/js/login.js"></script>
+</body>
+</html>

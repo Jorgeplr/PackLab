@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat+Alternates:wght@600&family=Nunito:wght@400;600;700;800&family=Pacifico&family=Playfair+Display:wght@700&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+  </script>
+  <title>PackLab · Diseña el empaque de tu emprendimiento</title>
+  <meta name="description" content="Elige una plantilla, personaliza tu empaque, visualízalo en 3D y exporta tu diseño para imprimir.">
+</head>
+<body>
+  <div data-header></div>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div>
+          <span class="badge">Hecho para emprendimientos de Milagro</span>
+          <h1 style="margin-top:14px">Crea un empaque único para tu emprendimiento</h1>
+          <p class="lead">Personaliza una plantilla, visualiza tu empaque en 3D y exporta tu diseño para llevarlo a imprimir.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="/plantillas.html">Comenzar a diseñar</a>
+            <a class="btn btn-outline btn-lg" href="/plantillas.html">Ver plantillas</a>
+          </div>
+        </div>
+        <div class="hero-stage" data-hero-stage aria-label="Empaques de ejemplo en 3D"></div>
+      </div>
+    </section>
+
+    <section class="section how" id="como-funciona">
+      <div class="container">
+        <div class="section-head">
+          <h2>¿Cómo funciona PackLab?</h2>
+          <p class="muted">Aprende en pocos pasos cómo crear, personalizar y exportar tu empaque.</p>
+        </div>
+        <div class="how-grid">
+          <div>
+            <div class="player" data-player>
+              <div class="player-caption" data-caption>Tutorial · 4 pasos</div>
+              <button class="player-play" data-play aria-label="Reproducir tutorial"></button>
+              <div class="player-bar">
+                <button data-toggle aria-label="Reproducir/pausar"></button>
+                <span data-time>0:00 / 0:24</span>
+                <div class="progress"><span data-progress></span></div>
+                <button data-full aria-label="Pantalla completa"></button>
+              </div>
+            </div>
+            <div style="text-align:center;margin-top:20px">
+              <a class="btn btn-dark" href="/plantillas.html">Comenzar a diseñar</a>
+            </div>
+          </div>
+          <ol class="steps" data-steps>
+            <li><span class="num">01</span><div><h3>Elige tu plantilla</h3><p>Selecciona el tipo de empaque que necesitas.</p></div></li>
+            <li><span class="num">02</span><div><h3>Personaliza</h3><p>Modifica colores, textos, logo y elementos gráficos.</p></div></li>
+            <li><span class="num">03</span><div><h3>Visualiza</h3><p>Observa tu empaque en 3D desde diferentes ángulos.</p></div></li>
+            <li><span class="num">04</span><div><h3>Exporta</h3><p>Obtén tu diseño terminado y llévalo a imprimir.</p></div></li>
+          </ol>
+        </div>
+      </div>
+      <div class="container features" data-features></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="flow" data-flow></div>
+      <p class="tagline">Tu idea, tu empaque, tu estilo</p>
+      <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/home.js"></script>
+</body>
+</html>

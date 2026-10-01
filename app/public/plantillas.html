@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat+Alternates:wght@600&family=Nunito:wght@400;600;700;800&family=Pacifico&family=Playfair+Display:wght@700&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+  </script>
+  <title>Plantillas · PackLab</title>
+</head>
+<body>
+  <div data-header></div>
+  <main class="container">
+    <div class="page-head">
+      <h1>Elige tu plantilla</h1>
+      <p class="muted">Selecciona una estructura y comienza a personalizarla.</p>
+      <div class="search">
+        <span data-search-icon></span>
+        <input class="input" type="search" placeholder="Buscar plantilla..." aria-label="Buscar plantilla" data-search>
+      </div>
+      <div class="chips" data-chips role="tablist"></div>
+    </div>
+    <div class="grid" data-grid></div>
+  </main>
+  <script type="module" src="/js/catalog.js"></script>
+</body>
+</html>

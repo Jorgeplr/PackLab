@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat+Alternates:wght@600&family=Nunito:wght@400;600;700;800&family=Pacifico&family=Playfair+Display:wght@700&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+  </script>
+  <title>Editor · PackLab</title>
+</head>
+<body class="editor-page">
+  <header class="editor-top">
+    <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
+    <input class="input name-input" data-name aria-label="Nombre del diseño" maxlength="120">
+    <span class="save-state" data-save-state></span>
+    <div class="actions">
+      <button class="btn btn-outline btn-sm" data-save>Guardar diseño</button>
+      <button class="btn btn-dark btn-sm" data-preview>Vista previa</button>
+    </div>
+  </header>
+
+  <div class="editor">
+    <aside class="tools">
+      <a class="back" href="/plantillas.html" data-back></a>
+      <h3>Herramientas</h3>
+      <div data-tools></div>
+    </aside>
+
+    <section class="workspace">
+      <div class="view-tabs" role="tablist">
+        <button class="active" data-mode="3d" role="tab">Vista 3D</button>
+        <button data-mode="2d" role="tab">Plano 2D</button>
+      </div>
+      <div class="stage" data-stage>
+        <div class="flat hidden" data-flat><img alt="Plano troquelado del empaque" data-flat-img></div>
+      </div>
+      <div class="stage-controls" data-controls></div>
+      <div class="angles" data-angles></div>
+      <button class="btn btn-primary btn-block" data-export>Exportar diseño</button>
+    </section>
+
+    <aside class="props">
+      <h2>Propiedades</h2>
+      <p class="dims" data-dims></p>
+
+      <div class="prop" id="p-color">
+        <label>Color del empaque</label>
+        <div class="swatches" data-swatches="color"></div>
+      </div>
+
+      <div class="prop" id="p-text">
+        <label for="f-text">Texto</label>
+        <input class="input" id="f-text" data-field="text" placeholder="Ingresa tu texto" maxlength="40">
+        <div class="row"><input class="input" data-field="subtext" placeholder="Texto secundario (eslogan)" maxlength="60" aria-label="Texto secundario"></div>
+        <div class="row">
+          <span class="small-label">Fuente</span>
+          <select class="input grow" data-field="font" aria-label="Fuente"></select>
+        </div>
+        <div class="row">
+          <span class="small-label">Tamaño</span>
+          <input class="grow" type="range" min="12" max="64" data-field="fontSize" aria-label="Tamaño del texto">
+          <span class="pill" data-size-label></span>
+        </div>
+        <div class="row">
+          <span class="small-label">Color</span>
+          <div class="swatches" data-swatches="textColor"></div>
+        </div>
+        <div class="row" style="margin-top:12px"><span class="small-label">Posición</span></div>
+        <div class="row" data-position></div>
+      </div>
+
+      <div class="prop" id="p-logo">
+        <label>Logo</label>
+        <div class="upload">
+          <label class="btn btn-outline btn-sm" style="margin:0">Subir logo<input type="file" accept="image/*" hidden data-upload="logo"></label>
+          <button class="btn btn-ghost btn-sm" data-remove="logo">Quitar</button>
+        </div>
+      </div>
+
+      <div class="prop" id="p-image">
+        <label>Imagen de fondo</label>
+        <div class="upload">
+          <label class="btn btn-outline btn-sm" style="margin:0">Subir imagen<input type="file" accept="image/*" hidden data-upload="image"></label>
+          <button class="btn btn-ghost btn-sm" data-remove="image">Quitar</button>
+        </div>
+      </div>
+
+      <div class="prop" id="p-graphics">
+        <label>Elementos gráficos</label>
+        <div class="choice-grid" data-graphics></div>
+        <div class="row" style="margin-top:10px">
+          <span class="small-label">Color</span>
+          <div class="swatches" data-swatches="graphicColor"></div>
+        </div>
+      </div>
+
+      <div class="prop" id="p-background">
+        <label>Fondos</label>
+        <div class="chips" data-patterns style="margin-bottom:10px"></div>
+        <div class="row">
+          <span class="small-label">Color</span>
+          <div class="swatches" data-swatches="patternColor"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module" src="/js/editor.js"></script>
+</body>
+</html>

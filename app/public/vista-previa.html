@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat+Alternates:wght@600&family=Nunito:wght@400;600;700;800&family=Pacifico&family=Playfair+Display:wght@700&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+  </script>
+  <title>Vista previa · PackLab</title>
+</head>
+<body>
+  <div data-header></div>
+  <main class="container">
+    <div class="page-head" style="padding-bottom:12px">
+      <a class="btn btn-ghost btn-sm" data-back style="padding-left:0"></a>
+      <h1 data-title>Vista previa de tu diseño</h1>
+    </div>
+    <div class="preview-layout">
+      <div>
+        <div class="stage preview-stage" data-stage></div>
+        <div class="stage-controls" style="margin-top:12px" data-controls></div>
+      </div>
+      <div class="thumbs" data-thumbs></div>
+    </div>
+    <div class="preview-footer">
+      <div>
+        <h3 data-ready-title>Tu empaque está listo</h3>
+        <p class="muted" style="margin:0" data-ready-sub>Revisa todos los ángulos de tu diseño antes de exportarlo.</p>
+      </div>
+      <div class="btns">
+        <a class="btn btn-outline" data-edit>Editar diseño</a>
+        <button class="btn btn-primary" data-export>Exportar diseño</button>
+      </div>
+    </div>
+  </main>
+  <script type="module" src="/js/preview.js"></script>
+</body>
+</html>
