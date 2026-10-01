@@ -2,6 +2,7 @@ import { api } from './api.js';
 import { icons } from './icons.js';
 import { renderHeader, renderFooter, initReveal, hydrateIcons } from './layout.js';
 import { templateCardHTML, setThumb } from './cards.js';
+import { initTutorial } from './tutorial.js';
 import { PackageViewer, renderSnapshot, defaultDesign } from './packaging.js';
 
 renderHeader(location.hash === '#como-funciona' ? 'como' : 'inicio');
@@ -70,87 +71,6 @@ function heroConfigurator() {
   update();
 }
 
-// ---------- Tutorial animado ----------
-function tutorial() {
-  const root = $('[data-player]');
-  const q = (s) => root.querySelector(s);
-  const steps = [...document.querySelectorAll('[data-steps] li')];
-  const viewer = new PackageViewer(root, { label: 'Tutorial animado de PackLab', keyboard: false });
-  viewer.controls.enableZoom = false;
-  const DURATION = 24;
-  const captions = ['1 · Elige tu plantilla', '2 · Personaliza', '3 · Visualiza en 3D', '4 · Exporta e imprime'];
-  const plain = { text: '', subtext: '', graphic: null };
-  const keyframes = [
-    [0, 'caja-rectangular', plain, 'iso'],
-    [2, 'bolsa-papel', plain, 'iso'],
-    [4, 'caja-rectangular', plain, 'iso'],
-    [6, 'caja-rectangular', { ...plain, color: '#F3EFE8', graphic: 'leaf' }, 'iso'],
-    [7.5, 'caja-rectangular', { color: '#F3EFE8', text: 'TU MARCA', subtext: '', graphic: 'leaf' }, 'iso'],
-    [9, 'caja-rectangular', { color: '#4A7C59', text: 'TU MARCA', subtext: 'Productos naturales', textColor: '#FFFFFF', graphicColor: '#E2A036' }, 'iso'],
-    [10.5, 'caja-rectangular', { color: '#D96B43', text: 'TU MARCA', subtext: 'Productos naturales', textColor: '#FFFFFF', graphicColor: '#FFFFFF', pattern: 'dots' }, 'iso'],
-    [12, null, null, 'front'],
-    [14, null, null, 'side'],
-    [16, null, null, 'top'],
-    [18, null, null, 'iso'],
-  ];
-  let t = 0;
-  let playing = false;
-  let last = 0;
-  let k = -1;
-
-  const fmt = (s) => `0:${String(Math.floor(s)).padStart(2, '0')}`;
-  const setIcons = () => {
-    q('[data-toggle]').innerHTML = playing ? icons.pause : icons.play;
-    q('[data-toggle]').setAttribute('aria-label', playing ? 'Pausar tutorial' : 'Reproducir tutorial');
-    q('[data-play]').innerHTML = icons.play;
-    q('[data-play]').classList.toggle('hidden', playing);
-  };
-  q('[data-full]').innerHTML = icons.expand;
-
-  async function apply(i) {
-    const [, slug, overrides, view] = keyframes[i];
-    if (slug && bySlug[slug]) await viewer.setPackage(bySlug[slug], { ...defaultDesign(bySlug[slug]), ...overrides });
-    viewer.setView(view);
-  }
-
-  function render() {
-    const step = Math.min(3, Math.floor(t / 6));
-    steps.forEach((li, i) => li.classList.toggle('active', i === step));
-    q('[data-caption]').textContent = t >= DURATION ? '¡Listo para imprimir!' : captions[step];
-    q('[data-progress]').style.width = `${(t / DURATION) * 100}%`;
-    q('[data-progressbar]').setAttribute('aria-valuenow', String(Math.floor(t)));
-    q('[data-time]').textContent = `${fmt(t)} / ${fmt(DURATION)}`;
-    let next = k;
-    while (next + 1 < keyframes.length && keyframes[next + 1][0] <= t) next++;
-    if (next !== k) { k = next; apply(k); }
-  }
-
-  function tick(now) {
-    if (!playing) return;
-    t = Math.min(DURATION, t + (now - last) / 1000);
-    last = now;
-    viewer.autoRotate = t > 18;
-    render();
-    if (t >= DURATION) { playing = false; setIcons(); return; }
-    requestAnimationFrame(tick);
-  }
-
-  function toggle() {
-    if (t >= DURATION) { t = 0; k = -1; }
-    playing = !playing;
-    setIcons();
-    if (playing) { last = performance.now(); requestAnimationFrame(tick); }
-  }
-
-  // Pausa automática si el tutorial sale de pantalla
-  new IntersectionObserver(([e]) => { if (!e.isIntersecting && playing) toggle(); }).observe(root);
-  q('[data-play]').addEventListener('click', toggle);
-  q('[data-toggle]').addEventListener('click', toggle);
-  q('[data-full]').addEventListener('click', () => (document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen?.()));
-  setIcons();
-  render();
-}
-
 // ---------- Plantillas destacadas ----------
 async function featured() {
   const list = ['caja-rectangular', 'bolsa-papel', 'frasco', 'caja-regalo'].map((s) => bySlug[s]).filter(Boolean);
@@ -162,6 +82,6 @@ async function featured() {
 initReveal();
 if (templates.length) {
   heroConfigurator();
-  tutorial();
+  initTutorial($('[data-player]'), $('[data-steps]'), bySlug);
   featured();
 }

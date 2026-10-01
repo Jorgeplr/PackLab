@@ -612,3 +612,72 @@ input[type=range] { width: 100%; accent-color: var(--terracota-600); min-height:
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ---------- Tutorial animado ---------- */
+.player canvas.three { transition: opacity var(--dur-slow) var(--ease); }
+.tut { position: absolute; inset: 0; pointer-events: none; font-family: var(--font-body); }
+.tut > * { transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
+.tut-cards {
+  position: absolute; left: 50%; top: 50%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3%;
+  width: 82%; transform: translate(-50%, -44%); opacity: 0;
+}
+.tut-cards.show { opacity: 1; transform: translate(-50%, -50%); }
+.tut-card { background: #fff; border-radius: 12px; border: 2px solid var(--line); overflow: hidden; box-shadow: var(--shadow); transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.tut-card.on { border-color: var(--terracota-600); transform: translateY(-6px) scale(1.04); }
+.tut-card-img { aspect-ratio: 4 / 3; background: radial-gradient(ellipse at 50% 70%, #fff, var(--kraft-50)) center / cover; }
+.tut-card span { display: block; padding: 6px 8px; font-size: clamp(.55rem, 1.1vw, .78rem); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tut-panel {
+  position: absolute; right: 3%; top: 16%; width: 34%; padding: 3% 3.2%; border-radius: 14px; background: rgba(255, 255, 255, .96);
+  box-shadow: var(--shadow-lg); border: 1px solid var(--line); opacity: 0; transform: translateX(24px); display: grid; gap: 10px;
+}
+.tut-panel.show { opacity: 1; transform: none; }
+.tut-row small { display: block; font-size: clamp(.5rem, .95vw, .7rem); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); margin-bottom: 4px; }
+.tut-sw, .tut-icons, .tut-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.tut-sw i { width: clamp(14px, 2vw, 22px); aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 1px var(--line-strong); border: 2px solid #fff; transition: box-shadow var(--dur) var(--ease); }
+.tut-sw i.on { box-shadow: 0 0 0 2px var(--ink); }
+.tut-input { display: flex; align-items: center; height: clamp(20px, 3vw, 30px); padding: 0 8px; border: 1.5px solid var(--line); border-radius: 8px; font: 800 clamp(.6rem, 1.1vw, .82rem) var(--font-title); letter-spacing: .04em; }
+.tut-input.focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(43, 91, 132, .15); }
+.tut-input .caret { width: 1.5px; height: 60%; background: var(--ink); margin-left: 2px; opacity: 0; }
+.tut-input.focus .caret { opacity: 1; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.tut-icons i { width: clamp(20px, 2.8vw, 30px); aspect-ratio: 1; display: grid; place-items: center; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); transition: all var(--dur) var(--ease); }
+.tut-icons i svg { width: 60%; height: 60%; }
+.tut-icons i.on { background: var(--azul); border-color: var(--azul); color: #fff; }
+.tut-chips i { font-style: normal; font-size: clamp(.5rem, .95vw, .7rem); font-weight: 800; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); transition: all var(--dur) var(--ease); }
+.tut-chips i.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.tut-badge {
+  position: absolute; left: 50%; bottom: 16%; transform: translate(-50%, 8px); opacity: 0;
+  background: var(--ink); color: #fff; padding: 6px 14px; border-radius: 999px; font-size: clamp(.65rem, 1.2vw, .85rem); font-weight: 800;
+}
+.tut-badge.show { opacity: 1; transform: translate(-50%, 0); }
+.tut-export {
+  position: absolute; inset: 9% 6% 15%; background: #fff; border-radius: 14px; box-shadow: var(--shadow-lg); border: 1px solid var(--line);
+  display: flex; flex-direction: column; overflow: hidden; opacity: 0; transform: scale(.94);
+}
+.tut-export.show { opacity: 1; transform: none; }
+.tut-dieline { flex: 1; min-height: 0; position: relative; }
+.tut-dieline img { position: absolute; inset: 4%; width: 92%; height: 92%; object-fit: contain; }
+.tut-export-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 2% 3%; border-top: 1px solid var(--line); font-size: clamp(.6rem, 1.1vw, .8rem); font-weight: 800; }
+.tut-export-bar span { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-soft); }
+.tut-export-bar svg { width: 16px; height: 16px; }
+.tut-btn { display: inline-flex; align-items: center; gap: 6px; font-style: normal; background: var(--terracota-600); color: #fff; padding: 6px 12px; border-radius: 8px; transition: transform var(--dur-fast) var(--ease); }
+.tut-btn.on { transform: scale(.95); background: var(--terracota-700); }
+.tut-toast {
+  position: absolute; left: 50%; top: 13%; transform: translate(-50%, -10px); opacity: 0; z-index: 4;
+  display: inline-flex; align-items: center; gap: 6px; background: var(--verde); color: #fff; padding: 6px 14px; border-radius: 999px;
+  font-size: clamp(.6rem, 1.1vw, .82rem); font-weight: 800; box-shadow: var(--shadow);
+}
+.tut-toast svg { width: 16px; height: 16px; }
+.tut-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.tut-cursor {
+  position: absolute; left: 0; top: 0; width: clamp(16px, 2.4vw, 24px); margin: -2px 0 0 -3px; opacity: 0; z-index: 5;
+  transition: transform .7s cubic-bezier(.45, .05, .25, 1), opacity var(--dur) var(--ease); filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .25));
+}
+.tut-cursor.show { opacity: 1; }
+.tut-cursor::after {
+  content: ''; position: absolute; left: 3px; top: 2px; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%;
+  background: rgba(180, 81, 44, .35); transform: scale(0); opacity: 0;
+}
+.tut-cursor.click::after { animation: ripple .5s var(--ease); }
+@keyframes ripple { 0% { transform: scale(.2); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+.player .player-caption, .player .player-bar, .player .player-play { z-index: 6; }
