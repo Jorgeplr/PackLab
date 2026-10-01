@@ -51,6 +51,21 @@ Al iniciar, el contenedor `app` aplica las migraciones y carga los datos inicial
 
 **Cuenta de prueba:** `demo@packlab.com` / `packlab123`
 
+## Despliegue en Dokploy
+
+1. **Create Service → Compose**.
+2. Provider **GitHub**: repositorio `Jorgeplr/PackLab`, rama `claude/relaxed-allen-n0jby3` (o `main`), **Compose Path** `./docker-compose.prod.yml`.
+3. Pestaña **Environment**:
+   ```
+   DB_PASSWORD=una-contraseña-segura
+   DB_ROOT_PASSWORD=otra-contraseña-segura
+   JWT_SECRET=una-cadena-larga-y-aleatoria
+   ```
+4. Pestaña **Domains → Add Domain**: servicio `app`, puerto `3000`. Usa *Generate* para un dominio gratuito `*.traefik.me` o pon tu propio dominio.
+5. **Deploy**. Las migraciones y datos iniciales se aplican solos al arrancar.
+
+`docker-compose.prod.yml` no publica puertos en el servidor (el 3000 lo usa Dokploy) ni incluye Adminer.
+
 ## Migraciones
 
 Las migraciones están en `app/migrations` y los seeds en `app/seeds`.

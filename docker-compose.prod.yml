@@ -1,0 +1,40 @@
+# Despliegue en producción (Dokploy u otro servidor con proxy inverso).
+# No publica puertos: el dominio se asigna desde Dokploy (pestaña Domains → servicio "app", puerto 3000).
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-packlab}
+      MYSQL_USER: ${DB_USER:-packlab}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Define DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  app:
+    build: ./app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-packlab}
+      DB_USER: ${DB_USER:-packlab}
+      DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET}
+      FREE_EXPORTS: ${FREE_EXPORTS:-3}
+    expose:
+      - "3000"
+
+volumes:
+  db_data:
