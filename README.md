@@ -49,6 +49,9 @@ docker compose up -d --build
 
 Al iniciar, el contenedor `app` aplica las migraciones y carga los datos iniciales.
 
+**Usuario master** (lo crea la migración `20261002000001_add_role_and_master_user`): `master@packlab.com` / `PackLab2026!`
+Se puede cambiar con `MASTER_EMAIL`, `MASTER_PASSWORD` y `MASTER_NAME` **antes del primer despliegue** (la migración se ejecuta una sola vez). Cambia la contraseña por defecto en producción.
+
 **Cuenta de prueba:** `demo@packlab.com` / `packlab123`
 
 ## Despliegue en Dokploy
@@ -88,7 +91,7 @@ Para empezar con una base de datos limpia: `docker compose down -v && docker com
 
 ### Tablas
 
-- `users`: cuentas de usuario.
+- `users`: cuentas de usuario, con `role` (`user` o `master`).
 - `categories`: Cajas, Bolsas, Etiquetas, Frascos, Alimentos, Otros.
 - `templates`: plantillas con su forma 3D (`box`, `case`, `gift`, `bag`, `food`, `jar`, `label`) y medidas en cm.
 - `designs`: diseños guardados por usuario (personalización en JSON + miniatura).

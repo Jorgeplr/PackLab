@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
   if (await db('users').where({ email }).first()) return res.status(409).json({ error: 'Ese correo ya está registrado.' });
 
   const [id] = await db('users').insert({ name, email, password_hash: await bcrypt.hash(password, 10) });
-  const user = { id, name, email };
+  const user = { id, name, email, role: 'user' };
   res.status(201).json({ token: signToken(user), user });
 });
 
@@ -27,12 +27,12 @@ router.post('/login', async (req, res) => {
   if (!row || !(await bcrypt.compare(password, row.password_hash))) {
     return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
   }
-  const user = { id: row.id, name: row.name, email: row.email };
+  const user = { id: row.id, name: row.name, email: row.email, role: row.role };
   res.json({ token: signToken(user), user });
 });
 
 router.get('/me', requireAuth, (req, res) => {
-  res.json({ user: { id: req.user.id, name: req.user.name, email: req.user.email } });
+  res.json({ user: { id: req.user.id, name: req.user.name, email: req.user.email, role: req.user.role } });
 });
 
 module.exports = router;

@@ -32,6 +32,9 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-packlab}
       JWT_SECRET: ${JWT_SECRET:-cambia-este-secreto}
       FREE_EXPORTS: ${FREE_EXPORTS:-3}
+      MASTER_NAME: ${MASTER_NAME:-Administrador PackLab}
+      MASTER_EMAIL: ${MASTER_EMAIL:-master@packlab.com}
+      MASTER_PASSWORD: ${MASTER_PASSWORD:-PackLab2026!}
     ports:
       - "${APP_PORT:-3000}:3000"
 

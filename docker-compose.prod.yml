@@ -33,6 +33,9 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET}
       FREE_EXPORTS: ${FREE_EXPORTS:-3}
+      MASTER_NAME: ${MASTER_NAME:-Administrador PackLab}
+      MASTER_EMAIL: ${MASTER_EMAIL:-master@packlab.com}
+      MASTER_PASSWORD: ${MASTER_PASSWORD:-PackLab2026!}
     expose:
       - "3000"
 
