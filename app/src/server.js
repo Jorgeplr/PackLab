@@ -24,6 +24,7 @@ app.use((err, req, res, next) => {
 
 // Frontend estático + Three.js servido desde node_modules
 app.use('/vendor/three', express.static(path.join(__dirname, '..', 'node_modules', 'three')));
+app.use('/vendor/fonts', express.static(path.join(__dirname, '..', 'node_modules', '@fontsource'), { maxAge: '30d', immutable: true }));
 app.use(express.static(path.join(__dirname, '..', 'public'), { extensions: ['html'] }));
 
 app.listen(PORT, () => console.log(`PackLab escuchando en http://localhost:${PORT}`));

@@ -11,7 +11,7 @@ El usuario elige una plantilla, la personaliza (colores, textos, logo, elementos
 | 1 | Página de inicio + tutorial animado | `/` |
 | 2 | Inicio de sesión / registro | `/login.html` |
 | 3 | Catálogo de plantillas (filtros y búsqueda) | `/plantillas.html` |
-| 4 | Editor (visor 3D + plano 2D) | `/editor.html?template=caja-rectangular` |
+| 4 | Editor (visor 3D, cara frontal editable y plano 2D; medidas, deshacer/rehacer) | `/editor.html?template=caja-rectangular` |
 | 5 | Vista previa | `/vista-previa.html?design=ID` |
 | 6 | Exportación (modal: plano troquelado, cara frontal o vista 3D en PNG) | desde el editor, la vista previa o Mis diseños |
 | 7 | Mis diseños | `/mis-disenos.html` |
@@ -23,11 +23,17 @@ Flujo: Inicio → Iniciar sesión → Catálogo → Elegir plantilla → Editor 
 La interfaz se revisó con la guía **UI UX Pro Max** (estilo *Nature Distilled* + patrón *Interactive 3D Configurator*), manteniendo la paleta de la propuesta visual:
 
 - Paleta: terracota `#D96B43` (acentos) y `#B4512C` (botones, contraste 5.1:1), verde orgánico `#4A7C59`, azul `#2B5B84`, amarillo `#E2A036` y kraft `#DDBB99`.
-- Tipografía: DM Serif Display (títulos), Nunito (texto) y Space Mono (medidas).
+- Tipografía: DM Serif Display (títulos), Nunito (texto) y Space Mono (medidas), alojadas en el propio servidor con `@fontsource` (`app/public/css/fonts.css`); no se depende de Google Fonts.
 - Accesibilidad: contraste ≥ 4.5:1, foco visible, objetivos táctiles de 44 px, etiquetas en botones de icono, errores junto a cada campo, modal con foco atrapado, controles de teclado en el visor 3D (flechas y +/-) y respeto a `prefers-reduced-motion`.
 - Rendimiento: el visor 3D deja de renderizar cuando no está en pantalla o la pestaña está oculta.
 
 Los estilos están en `app/public/css/styles.css` (tokens de color, espaciado y movimiento en `:root`).
+
+## Editor
+
+- **Medidas**: ancho, alto y fondo en cm (diámetro y alto en frascos). El modelo 3D y el plano troquelado se recalculan.
+- **Cara frontal**: arrastra el logo, el gráfico, el texto y el eslogan (o muévelos con Tab + flechas). Los botones de posición vuelven a la disposición automática.
+- **Deshacer / rehacer**: botones en la barra superior, `Ctrl+Z` y `Ctrl+Y` (o `Ctrl+Shift+Z`).
 
 ## Tecnologías
 

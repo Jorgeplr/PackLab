@@ -3,7 +3,7 @@ import { icons } from './icons.js';
 import { renderHeader, renderFooter, escapeHTML } from './layout.js';
 import { setDraft, loadWorkingDesign } from './store.js';
 import { openExportModal } from './export-modal.js';
-import { PackageViewer, renderSnapshot, defaultDesign } from './packaging.js';
+import { PackageViewer, renderSnapshot, defaultDesign, effectiveTemplate } from './packaging.js';
 
 renderHeader('plantillas');
 renderFooter();
@@ -24,7 +24,8 @@ const editUrl = state.designId ? `/editor.html?design=${state.designId}` : `/edi
 
 $('[data-back]').innerHTML = `${icons.back} ${templateOnly ? 'Volver al catálogo' : 'Volver al editor'}`;
 $('[data-ready-ico]').innerHTML = templateOnly ? icons.box : icons.check;
-$('[data-subtitle]').innerHTML = `${escapeHTML(template.name)} · <span class="mono">${template.width} × ${template.height} × ${template.depth} cm</span>`;
+const dims = effectiveTemplate(template, state.data);
+$('[data-subtitle]').innerHTML = `${escapeHTML(template.name)} · <span class="mono">${dims.width} × ${dims.height} × ${dims.depth} cm</span>`;
 $('[data-back]').href = templateOnly ? '/plantillas.html' : editUrl;
 $('[data-edit]').href = editUrl;
 if (templateOnly) {

@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat+Alternates:wght@600&family=Nunito:wght@400;600;700;800&family=Pacifico&family=Playfair+Display:wght@700&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="preload" href="/vendor/fonts/nunito/files/nunito-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/vendor/fonts/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/fonts.css">
   <link rel="stylesheet" href="/css/styles.css">
   <script type="importmap">
     { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
@@ -22,6 +22,10 @@
     <input class="input name-input" id="design-name" data-name maxlength="120">
     <span class="save-state" data-save-state role="status" aria-live="polite"></span>
     <div class="actions">
+      <div class="history-btns" role="group" aria-label="Historial">
+        <button class="icon-btn" type="button" data-undo aria-label="Deshacer (Ctrl+Z)" title="Deshacer (Ctrl+Z)" disabled><span data-i="undo"></span></button>
+        <button class="icon-btn" type="button" data-redo aria-label="Rehacer (Ctrl+Y)" title="Rehacer (Ctrl+Y)" disabled><span data-i="redo"></span></button>
+      </div>
       <button class="btn btn-outline btn-sm" type="button" data-save title="Guardar (Ctrl+S)"><span data-i="check"></span>Guardar</button>
       <button class="btn btn-dark btn-sm" type="button" data-preview><span data-i="eye"></span>Vista previa</button>
       <button class="btn btn-primary btn-sm" type="button" data-export><span data-i="download"></span>Exportar</button>
@@ -40,11 +44,19 @@
       <div class="workspace-top">
         <div class="view-tabs" role="tablist" aria-label="Modo de vista">
           <button class="active" data-mode="3d" role="tab" aria-selected="true">Vista 3D</button>
+          <button data-mode="face" role="tab" aria-selected="false">Cara frontal</button>
           <button data-mode="2d" role="tab" aria-selected="false">Plano 2D</button>
         </div>
         <div class="angles" data-angles role="group" aria-label="Ángulo de cámara"></div>
       </div>
       <div class="stage" data-stage>
+        <div class="face-editor hidden" data-face>
+          <div class="face-wrap" data-face-wrap>
+            <canvas data-face-canvas aria-hidden="true"></canvas>
+            <div class="face-boxes" data-face-boxes></div>
+          </div>
+          <p class="face-hint"><span data-i="move"></span>Arrastra el logo, el gráfico o los textos para moverlos. Con el teclado: Tab para elegir y flechas para mover.</p>
+        </div>
         <div class="flat hidden" data-flat><img alt="Plano troquelado del empaque con líneas de corte y doblez" data-flat-img></div>
         <div class="stage-dock" data-controls role="toolbar" aria-label="Controles de vista"></div>
       </div>
@@ -54,6 +66,19 @@
       <div class="props-head">
         <h2>Propiedades</h2>
         <p class="dims" data-dims></p>
+      </div>
+
+      <div class="prop" id="p-dims">
+        <h3 class="prop-title"><span data-i="ruler"></span>Medidas</h3>
+        <div class="dims-grid">
+          <div><label for="d-width" data-dim-label="width">Ancho</label><div class="unit-input"><input class="input" id="d-width" type="number" inputmode="decimal" min="2" max="80" step="0.5" data-dim="width"><span>cm</span></div></div>
+          <div><label for="d-height">Alto</label><div class="unit-input"><input class="input" id="d-height" type="number" inputmode="decimal" min="2" max="80" step="0.5" data-dim="height"><span>cm</span></div></div>
+          <div data-dim-wrap="depth"><label for="d-depth">Fondo</label><div class="unit-input"><input class="input" id="d-depth" type="number" inputmode="decimal" min="1" max="80" step="0.5" data-dim="depth"><span>cm</span></div></div>
+        </div>
+        <div class="row" style="justify-content:space-between">
+          <p class="hint" style="margin:0" data-dims-hint>Entre 2 y 80 cm.</p>
+          <button class="btn btn-ghost btn-sm" type="button" data-dims-reset>Restablecer</button>
+        </div>
       </div>
 
       <div class="prop" id="p-text">

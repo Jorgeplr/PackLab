@@ -188,7 +188,12 @@ function fitText(ctx, text, font, size, maxWidth) {
   return s;
 }
 
-/** Dibuja logo + gráfico + textos dentro del rectángulo (x0, y0, W, H). */
+/**
+ * Dibuja logo + gráfico + textos dentro del rectángulo (x0, y0, W, H).
+ * Sin design.positions los apila según align/valign; con positions, cada elemento
+ * se centra en su punto (coordenadas 0..1 relativas a la cara).
+ * Devuelve la caja de cada elemento en coordenadas 0..1 (para arrastrarlos en el editor).
+ */
 function drawContent(ctx, x0, y0, W, H, design, assets, unit) {
   const pad = Math.min(W, H) * 0.09;
   const base = Math.min(W, H);
@@ -196,48 +201,62 @@ function drawContent(ctx, x0, y0, W, H, design, assets, unit) {
   const items = [];
 
   if (assets.logo) {
-    const box = base * 0.3;
+    const box = base * 0.3 * (design.logoScale || 1);
     const r = Math.min(box / assets.logo.width, box / assets.logo.height);
-    items.push({ type: 'img', img: assets.logo, w: assets.logo.width * r, h: assets.logo.height * r });
+    items.push({ key: 'logo', type: 'img', img: assets.logo, w: assets.logo.width * r, h: assets.logo.height * r });
   }
   if (assets.graphic) {
     const size = base * (assets.logo ? 0.16 : 0.26);
-    items.push({ type: 'img', img: assets.graphic, w: size, h: size });
+    items.push({ key: 'graphic', type: 'img', img: assets.graphic, w: size, h: size });
   }
   const maxW = W - pad * 2;
   if (design.text) {
     const font = (s) => `${weight} ${s}px ${family}`;
     const size = fitText(ctx, design.text, font, design.fontSize * unit, maxW);
-    items.push({ type: 'text', text: design.text, font: font(size), h: size, color: design.textColor });
+    ctx.font = font(size);
+    items.push({ key: 'text', type: 'text', text: design.text, font: font(size), w: ctx.measureText(design.text).width, h: size, color: design.textColor });
   }
   if (design.subtext) {
     const font = (s) => `600 ${s}px "Nunito"`;
     const size = fitText(ctx, design.subtext, font, design.fontSize * unit * 0.42, maxW);
-    items.push({ type: 'text', text: design.subtext, font: font(size), h: size * 1.1, color: design.textColor, alpha: 0.8 });
+    ctx.font = font(size);
+    items.push({ key: 'subtext', type: 'text', text: design.subtext, font: font(size), w: ctx.measureText(design.subtext).width, h: size * 1.1, color: design.textColor, alpha: 0.8 });
   }
-  if (!items.length) return;
+  if (!items.length) return [];
 
+  // Posición apilada (por defecto): centro de cada elemento
   const gap = base * 0.035;
   const total = items.reduce((sum, it) => sum + it.h, 0) + gap * (items.length - 1);
   let y = y0 + (design.valign === 'top' ? pad : design.valign === 'bottom' ? H - pad - total : (H - total) / 2);
-  const ax = design.align === 'left' ? x0 + pad : design.align === 'right' ? x0 + W - pad : x0 + W / 2;
+  for (const it of items) {
+    const left = design.align === 'left' ? x0 + pad : design.align === 'right' ? x0 + W - pad - it.w : x0 + (W - it.w) / 2;
+    it.cx = left + it.w / 2;
+    it.cy = y + it.h / 2;
+    y += it.h + gap;
+    const free = design.positions?.[it.key];
+    if (free) {
+      it.cx = x0 + Math.min(1, Math.max(0, free.x)) * W;
+      it.cy = y0 + Math.min(1, Math.max(0, free.y)) * H;
+    }
+  }
 
   for (const it of items) {
     if (it.type === 'img') {
-      const x = design.align === 'left' ? ax : design.align === 'right' ? ax - it.w : ax - it.w / 2;
-      ctx.drawImage(it.img, x, y, it.w, it.h);
+      ctx.drawImage(it.img, it.cx - it.w / 2, it.cy - it.h / 2, it.w, it.h);
     } else {
       ctx.save();
       ctx.font = it.font;
       ctx.fillStyle = it.color;
       ctx.globalAlpha = it.alpha ?? 1;
-      ctx.textAlign = design.align;
-      ctx.textBaseline = 'top';
-      ctx.fillText(it.text, ax, y);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(it.text, it.cx, it.cy);
       ctx.restore();
     }
-    y += it.h + gap;
   }
+  return items.map((it) => ({
+    key: it.key, x: (it.cx - x0) / W, y: (it.cy - y0) / H, w: it.w / W, h: it.h / H,
+  }));
 }
 
 function makeCanvas(w, h) {
@@ -261,7 +280,7 @@ export async function renderFace(design, wCm, hCm, { kind = 'front', px = 1024 }
   const ctx = canvas.getContext('2d');
   const unit = canvas.width / 400; // fontSize se define sobre una cara de 400px de ancho
   drawBackground(ctx, canvas.width, canvas.height, design, kind === 'front' ? assets : {}, canvas.width / wCm / 20);
-  if (kind === 'front') drawContent(ctx, 0, 0, canvas.width, canvas.height, design, assets, unit);
+  canvas.layout = kind === 'front' ? drawContent(ctx, 0, 0, canvas.width, canvas.height, design, assets, unit) : [];
   return canvas;
 }
 
@@ -275,6 +294,27 @@ async function renderWrapLabel(design, circCm, hCm, px = 2048) {
   drawBackground(ctx, canvas.width, canvas.height, design, assets, canvas.width / circCm / 20);
   drawContent(ctx, (canvas.width - front) / 2, 0, front, canvas.height, design, assets, unit);
   return canvas;
+}
+
+/** Plantilla con las medidas personalizadas del diseño (design.dims, en cm). */
+export function effectiveTemplate(template, design) {
+  const d = design?.dims;
+  if (!d) return template;
+  const t = { ...template, width: d.width ?? template.width, height: d.height ?? template.height, depth: d.depth ?? template.depth };
+  if (t.shape === 'jar') t.depth = t.width;
+  return t;
+}
+
+/** Medidas (cm) de la cara editable: el frente del empaque o la zona visible de la etiqueta del frasco. */
+export function faceDims(template) {
+  if (template.shape === 'jar') return { w: Math.PI * template.width * 0.42, h: template.height * 0.82 * 0.6 };
+  return { w: template.width, h: template.height };
+}
+
+/** Cara frontal tal como se imprime (respeta medidas personalizadas). */
+export function renderFrontFace(template, design, opts) {
+  const { w, h } = faceDims(effectiveTemplate(template, design));
+  return renderFace(design, w, h, opts);
 }
 
 // ---------------------------------------------------------------------------
@@ -304,7 +344,8 @@ function handle(radius, tube, color) {
 }
 
 /** Crea el grupo 3D de una plantilla. Medidas en cm escaladas a unidades de escena. */
-export async function buildPackage(template, design) {
+export async function buildPackage(baseTemplate, design) {
+  const template = effectiveTemplate(baseTemplate, design);
   const k = 3 / Math.max(template.width, template.height, template.depth);
   const w = template.width * k;
   const h = template.height * k;
@@ -337,7 +378,7 @@ export async function buildPackage(template, design) {
   const front = texture(await renderFace(design, template.width, template.height));
   const plain = texture(await renderFace(design, template.depth || 1, template.height, { kind: 'plain', px: 512 }));
   const top = shape === 'food'
-    ? texture(await renderFace({ ...design, valign: 'middle' }, template.width, template.depth))
+    ? texture(await renderFace({ ...design, valign: 'middle', positions: null }, template.width, template.depth))
     : texture(await renderFace(design, template.width, template.depth || 1, { kind: 'plain', px: 512 }));
 
   const sideMat = mat({ map: plain });
@@ -678,7 +719,8 @@ function edgesOf(pieces) {
 }
 
 /** Devuelve un canvas con el plano troquelado listo para imprimir. */
-export async function renderDieline(template, design) {
+export async function renderDieline(baseTemplate, design) {
+  const template = effectiveTemplate(baseTemplate, design);
   const W = template.width;
   const H = template.height;
   const D = template.depth;
@@ -709,7 +751,7 @@ export async function renderDieline(template, design) {
     front: await renderFace(design, W, H, { px: 1200 }),
     plain: await renderFace(design, D || 1, H, { kind: 'plain', px: 600 }),
     top: template.shape === 'food'
-      ? await renderFace({ ...design, valign: 'middle' }, W, D)
+      ? await renderFace({ ...design, valign: 'middle', positions: null }, W, D)
       : await renderFace(design, W, D || 1, { kind: 'plain', px: 600 }),
     wrap: template.shape === 'jar' ? await renderWrapLabel(design, Math.PI * W, H * 0.82 * 0.6) : null,
   };

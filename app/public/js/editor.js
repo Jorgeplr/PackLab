@@ -4,7 +4,7 @@ import { toast, hydrateIcons, busy } from './layout.js';
 import { setDraft, saveDesign, loadWorkingDesign } from './store.js';
 import { openExportModal } from './export-modal.js';
 import {
-  PackageViewer, renderSnapshot, renderDieline, defaultDesign, FONTS, COLORS, GRAPHICS, PATTERNS, graphicSVG,
+  PackageViewer, renderSnapshot, renderDieline, renderFrontFace, effectiveTemplate, defaultDesign, FONTS, COLORS, GRAPHICS, PATTERNS, graphicSVG,
 } from './packaging.js';
 
 const $ = (s) => document.querySelector(s);
@@ -26,10 +26,15 @@ document.title = `${state.name} · Editor · PackLab`;
 // ---------- Estructura estática ----------
 hydrateIcons();
 $('[data-back]').innerHTML = `${icons.back}<span>Volver al catálogo</span>`;
-$('[data-dims]').textContent = `${template.name} · ${template.width} × ${template.height} × ${template.depth} cm`;
+const showDims = () => {
+  const t = effectiveTemplate(template, state.data);
+  $('[data-dims]').textContent = `${template.name} · ${t.width} × ${t.height} × ${t.depth} cm`;
+};
+showDims();
 $('[data-name]').value = state.name;
 
 const tools = [
+  ['p-dims', icons.ruler, 'Medidas'],
   ['p-text', icons.text, 'Texto'],
   ['p-logo', icons.logo, 'Logo'],
   ['p-color', icons.palette, 'Colores'],
@@ -85,7 +90,7 @@ $('[data-position]').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-pos]');
   if (!btn) return;
   const [k, v] = btn.dataset.pos.split(':');
-  set(k, v);
+  setMany({ [k]: v, positions: null });
 });
 
 const GRAPHIC_NAMES = { leaf: 'Hojas', star: 'Estrella', flower: 'Flor', heart: 'Corazón', sun: 'Sol', seal: 'Sello' };
@@ -193,7 +198,10 @@ function setMode(next) {
   });
   $('[data-controls]').classList.toggle('hidden', mode !== '3d');
   $('[data-flat]').classList.toggle('hidden', mode !== '2d');
+  $('[data-face]').classList.toggle('hidden', mode !== 'face');
+  $('[data-angles]').classList.toggle('hidden', mode !== '3d');
   if (mode === '2d') renderFlat();
+  if (mode === 'face') renderFaceEditor();
 }
 $$('[data-mode]').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
 
@@ -203,6 +211,155 @@ async function renderFlat() {
   const canvas = await renderDieline(template, state.data);
   if (token === flatToken) $('[data-flat-img]').src = canvas.toDataURL('image/png');
 }
+
+// ---------- Cara frontal: arrastrar elementos ----------
+const ELEMENT_NAMES = { logo: 'Logo', graphic: 'Gráfico', text: 'Texto', subtext: 'Eslogan' };
+let faceLayout = [];
+let faceToken = 0;
+let drag = null;
+
+function fitFace(canvas) {
+  const wrap = $('[data-face-wrap]');
+  const box = $('[data-face]').getBoundingClientRect();
+  const maxW = box.width - 48;
+  const maxH = box.height - 110;
+  const r = Math.min(maxW / canvas.width, maxH / canvas.height);
+  wrap.style.width = `${Math.max(120, canvas.width * r)}px`;
+  wrap.style.height = `${Math.max(80, canvas.height * r)}px`;
+}
+
+async function renderFaceEditor() {
+  const token = ++faceToken;
+  const src = await renderFrontFace(template, state.data, { px: 900 });
+  if (token !== faceToken || mode !== 'face') return;
+  const canvas = $('[data-face-canvas]');
+  canvas.width = src.width;
+  canvas.height = src.height;
+  canvas.getContext('2d').drawImage(src, 0, 0);
+  fitFace(src);
+  faceLayout = src.layout;
+  const focused = document.activeElement?.dataset?.box;
+  $('[data-face-boxes]').innerHTML = faceLayout.map((b) => `
+    <div class="face-box ${drag?.key === b.key ? 'active' : ''}" data-box="${b.key}" tabindex="0" role="button"
+      aria-label="Mover ${ELEMENT_NAMES[b.key]}. Usa las flechas para moverlo."
+      style="left:${(b.x - b.w / 2) * 100}%;top:${(b.y - b.h / 2) * 100}%;width:${b.w * 100}%;height:${b.h * 100}%">
+      <span>${ELEMENT_NAMES[b.key]}</span></div>`).join('');
+  if (focused) $(`[data-box="${focused}"]`)?.focus();
+}
+new ResizeObserver(() => { if (mode === 'face') fitFace($('[data-face-canvas]')); }).observe($('[data-stage]'));
+
+/** Posiciones actuales de todos los elementos (para que nada salte al mover uno). */
+function currentPositions() {
+  const pos = { ...(state.data.positions || {}) };
+  faceLayout.forEach((b) => { if (!pos[b.key]) pos[b.key] = { x: b.x, y: b.y }; });
+  return pos;
+}
+
+/** Mantiene el elemento completo dentro de la cara. */
+function clampTo(key, x, y) {
+  const b = faceLayout.find((it) => it.key === key) || { w: 0, h: 0 };
+  const cx = Math.min(1 - b.w / 2, Math.max(b.w / 2, x));
+  const cy = Math.min(1 - b.h / 2, Math.max(b.h / 2, y));
+  return { x: +cx.toFixed(4), y: +cy.toFixed(4) };
+}
+
+function moveElement(key, x, y) {
+  const positions = currentPositions();
+  positions[key] = clampTo(key, x, y);
+  setMany({ positions }, { coalesce: `move-${key}` });
+}
+
+const faceBoxes = $('[data-face-boxes]');
+faceBoxes.addEventListener('pointerdown', (e) => {
+  const el = e.target.closest('[data-box]');
+  if (!el) return;
+  e.preventDefault();
+  const b = faceLayout.find((x) => x.key === el.dataset.box);
+  const rect = $('[data-face-wrap]').getBoundingClientRect();
+  drag = { key: b.key, dx: (e.clientX - rect.left) / rect.width - b.x, dy: (e.clientY - rect.top) / rect.height - b.y, rect };
+  pushHistory(); // un solo paso de deshacer por arrastre
+  el.classList.add('active');
+  faceBoxes.setPointerCapture(e.pointerId);
+});
+faceBoxes.addEventListener('pointermove', (e) => {
+  if (!drag) return;
+  const x = (e.clientX - drag.rect.left) / drag.rect.width - drag.dx;
+  const y = (e.clientY - drag.rect.top) / drag.rect.height - drag.dy;
+  const positions = currentPositions();
+  positions[drag.key] = clampTo(drag.key, x, y);
+  applyData({ ...state.data, positions });
+});
+const endDrag = () => { if (drag) { drag = null; refresh(); } };
+faceBoxes.addEventListener('pointerup', endDrag);
+faceBoxes.addEventListener('pointercancel', endDrag);
+faceBoxes.addEventListener('keydown', (e) => {
+  const el = e.target.closest('[data-box]');
+  const step = e.shiftKey ? 0.05 : 0.01;
+  const delta = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+  if (!el || !delta) return;
+  e.preventDefault();
+  const b = faceLayout.find((x) => x.key === el.dataset.box);
+  moveElement(b.key, b.x + delta[0], b.y + delta[1]);
+});
+
+// ---------- Medidas ----------
+const isJar = template.shape === 'jar';
+const isLabel = template.shape === 'label';
+if (isJar) $('[data-dim-label="width"]').textContent = 'Diámetro';
+if (isJar || isLabel) {
+  $('[data-dim-wrap="depth"]').classList.add('hidden');
+  $('.dims-grid').classList.add('two');
+}
+$$('[data-dim]').forEach((input) => input.addEventListener('change', () => {
+  const key = input.dataset.dim;
+  const min = Number(input.min);
+  const max = Number(input.max);
+  let v = Number(String(input.value).replace(',', '.'));
+  if (!Number.isFinite(v) || v <= 0) v = effectiveTemplate(template, state.data)[key];
+  v = Math.round(Math.min(max, Math.max(min, v)) * 2) / 2;
+  input.value = v;
+  const cur = effectiveTemplate(template, state.data);
+  setMany({ dims: { width: cur.width, height: cur.height, depth: cur.depth, [key]: v } });
+}));
+$('[data-dims-reset]').addEventListener('click', () => setMany({ dims: null }));
+
+// ---------- Deshacer / rehacer ----------
+const undoStack = [];
+const redoStack = [];
+let lastChange = { key: null, at: 0 };
+
+function pushHistory() {
+  undoStack.push(JSON.stringify(state.data));
+  if (undoStack.length > 100) undoStack.shift();
+  redoStack.length = 0;
+  syncHistory();
+}
+function syncHistory() {
+  $('[data-undo]').disabled = !undoStack.length;
+  $('[data-redo]').disabled = !redoStack.length;
+}
+function restore(from, to) {
+  if (!from.length) return;
+  to.push(JSON.stringify(state.data));
+  state.data = JSON.parse(from.pop());
+  lastChange = { key: null, at: 0 };
+  markDirty();
+  refresh();
+  syncHistory();
+}
+const undo = () => restore(undoStack, redoStack);
+const redo = () => restore(redoStack, undoStack);
+$('[data-undo]').addEventListener('click', undo);
+$('[data-redo]').addEventListener('click', redo);
+document.addEventListener('keydown', (e) => {
+  if (!(e.ctrlKey || e.metaKey)) return;
+  const k = e.key.toLowerCase();
+  if (k !== 'z' && k !== 'y') return;
+  // Dentro de un campo de texto se respeta el deshacer nativo del navegador
+  if (e.target.matches('input[type=text], input:not([type]), textarea, [data-name]')) return;
+  e.preventDefault();
+  if (k === 'y' || e.shiftKey) redo(); else undo();
+});
 
 // ---------- Estado ----------
 function syncControls() {
@@ -220,6 +377,10 @@ function syncControls() {
   });
   $$('[data-graphic]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.graphic || null) === (d.graphic || null))));
   $$('[data-pattern]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pattern === d.pattern)));
+  const dims = effectiveTemplate(template, d);
+  $$('[data-dim]').forEach((el) => { if (document.activeElement !== el) el.value = dims[el.dataset.dim]; });
+  $('[data-dims-reset]').disabled = !d.dims;
+  $$('[data-pos]').forEach((b) => { if (d.positions) b.setAttribute('aria-pressed', 'false'); });
   ['logo', 'image'].forEach((k) => {
     $(`[data-remove=${k}]`).disabled = !d[k];
     $(`[data-preview-of=${k}]`).style.backgroundImage = d[k] ? `url("${d[k]}")` : '';
@@ -236,6 +397,8 @@ function setSaveState(state) {
 let renderTimer;
 function refresh() {
   syncControls();
+  showDims();
+  if (mode === 'face') renderFaceEditor();
   clearTimeout(renderTimer);
   renderTimer = setTimeout(() => {
     viewer.setPackage(template, state.data);
@@ -244,11 +407,34 @@ function refresh() {
   }, 120);
 }
 
-function set(key, value) {
-  state.data[key] = value;
+function markDirty() {
   dirty = true;
   setSaveState(state.designId ? 'dirty' : 'new');
+}
+
+/** Cambio en vivo durante un arrastre (sin historial ni re-render 3D). */
+function applyData(data) {
+  state.data = data;
+  markDirty();
+  renderFaceEditor();
+}
+
+/**
+ * Aplica cambios al diseño y los registra en el historial.
+ * Cambios seguidos sobre la misma propiedad (escribir, deslizar) se agrupan en un solo paso.
+ */
+function setMany(patch, { coalesce } = {}) {
+  const key = coalesce === undefined ? Object.keys(patch).join(',') : coalesce;
+  const now = Date.now();
+  if (!key || key !== lastChange.key || now - lastChange.at > 800) pushHistory();
+  lastChange = { key, at: now };
+  state.data = { ...state.data, ...patch };
+  markDirty();
   refresh();
+}
+
+function set(key, value) {
+  setMany({ [key]: value });
 }
 
 $('[data-name]').addEventListener('input', (e) => {
@@ -309,6 +495,7 @@ $('[data-export]').addEventListener('click', () => openExportModal({
 window.addEventListener('beforeunload', () => setDraft(state));
 
 setSaveState(state.designId ? 'saved' : 'new');
+syncHistory();
 syncControls();
 await viewer.setPackage(template, state.data);
 setDraft(state);

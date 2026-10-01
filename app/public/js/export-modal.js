@@ -2,7 +2,7 @@
 import { api, session, goToLogin } from './api.js';
 import { icons } from './icons.js';
 import { escapeHTML, busy } from './layout.js';
-import { renderFace, renderDieline, renderSnapshot, downloadCanvas, downloadDataURL } from './packaging.js';
+import { renderFrontFace, renderDieline, renderSnapshot, downloadCanvas, downloadDataURL } from './packaging.js';
 
 const FORMATS = [
   { key: 'png-plano', icon: 'dieline', label: 'Plano troquelado (PNG)', hint: 'Plano desplegado con líneas de corte y doblez, listo para la imprenta.' },
@@ -90,7 +90,7 @@ export async function openExportModal({ template, getDesign, ensureSaved, before
       const { name, data } = getDesign();
       const file = `packlab-${slugify(name)}-${format.replace('png-', '')}.png`;
       if (format === 'png-plano') await downloadCanvas(await renderDieline(template, data), file);
-      if (format === 'png-cara') await downloadCanvas(await renderFace(data, template.width, template.height, { px: 2048 }), file);
+      if (format === 'png-cara') await downloadCanvas(await renderFrontFace(template, data, { px: 2048 }), file);
       if (format === 'png-3d') downloadDataURL(await renderSnapshot(template, data, { width: 1600, height: 1200 }), file);
       restore();
       btn.innerHTML = `${icons.check} Descargado`;
