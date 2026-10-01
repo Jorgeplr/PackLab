@@ -328,7 +328,7 @@ export async function buildPackage(template, design) {
     );
     label.position.y = bodyH * 0.47;
     const lidH = h * 0.18;
-    const lid = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.94, r * 0.94, lidH, 64), mat({ color: shade(design.color, -0.15), roughness: 0.4 }));
+    const lid = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.94, r * 0.94, lidH, 64), mat({ color: shade(design.color, -0.06), roughness: 0.7 }));
     lid.position.y = bodyH + lidH / 2;
     [body, label, lid].forEach((m) => { m.castShadow = true; group.add(m); });
     return group;
@@ -449,12 +449,20 @@ function frame(camera, object, view = 'iso', zoom = 1) {
   return { target: sphere.center.clone(), position: sphere.center.clone().add(dir.multiplyScalar(dist)) };
 }
 
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export class PackageViewer {
-  constructor(container, { autoRotate = false } = {}) {
+  /**
+   * @param {HTMLElement} container
+   * @param {{autoRotate?: boolean, label?: string, keyboard?: boolean}} opts
+   */
+  constructor(container, { autoRotate = false, label = 'Vista 3D del empaque', keyboard = true } = {}) {
     this.container = container;
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.domElement.classList.add('three');
+    this.renderer.domElement.setAttribute('role', 'img');
+    this.renderer.domElement.setAttribute('aria-label', label);
     container.prepend(this.renderer.domElement);
     Object.assign(this, createStage(this.renderer));
 
@@ -464,15 +472,51 @@ export class PackageViewer {
     this.controls.minDistance = 2;
     this.controls.maxDistance = 20;
     this.controls.maxPolarAngle = Math.PI * 0.495;
-    this.controls.autoRotate = autoRotate;
+    this.controls.autoRotate = autoRotate && !REDUCED_MOTION;
     this.controls.autoRotateSpeed = 1.6;
     this.controls.addEventListener('start', () => { this.tween = null; });
+
+    // Alternativa de teclado al arrastre: flechas giran, +/- acercan.
+    if (keyboard) {
+      container.tabIndex = 0;
+      container.setAttribute('aria-label', `${label}. Usa las flechas para girar y + o - para acercar.`);
+      container.addEventListener('keydown', (e) => this.onKey(e));
+    }
 
     this.resize = this.resize.bind(this);
     new ResizeObserver(this.resize).observe(container);
     this.resize();
+
+    // Solo renderiza cuando el visor está en pantalla y la pestaña visible.
+    this.visible = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => { this.visible = entry.isIntersecting; this.kick(); }).observe(container);
+    }
+    document.addEventListener('visibilitychange', () => this.kick());
     this.loop = this.loop.bind(this);
+    this.running = false;
+    this.kick();
+  }
+
+  kick() {
+    if (this.running || !this.visible || document.hidden) return;
+    this.running = true;
     requestAnimationFrame(this.loop);
+  }
+
+  onKey(e) {
+    const step = Math.PI / 12;
+    const az = { ArrowLeft: -step, ArrowRight: step }[e.key];
+    const pol = { ArrowUp: -step, ArrowDown: step }[e.key];
+    if (az || pol) {
+      e.preventDefault();
+      const offset = this.camera.position.clone().sub(this.controls.target);
+      const sph = new THREE.Spherical().setFromVector3(offset);
+      sph.theta -= az || 0;
+      sph.phi = THREE.MathUtils.clamp(sph.phi + (pol || 0), 0.15, this.controls.maxPolarAngle);
+      this.moveCamera({ target: this.controls.target.clone(), position: this.controls.target.clone().add(new THREE.Vector3().setFromSpherical(sph)) });
+    } else if (e.key === '+' || e.key === '=') { e.preventDefault(); this.zoom(1.2); }
+    else if (e.key === '-' || e.key === '_') { e.preventDefault(); this.zoom(0.83); }
   }
 
   resize() {
@@ -481,11 +525,13 @@ export class PackageViewer {
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    this.renderer.render(this.scene, this.camera);
   }
 
   loop(t) {
+    if (!this.visible || document.hidden) { this.running = false; return; }
     if (this.tween) {
-      const p = Math.min(1, (t - this.tween.start) / 450);
+      const p = REDUCED_MOTION ? 1 : Math.min(1, (t - this.tween.start) / 450);
       const e = 1 - (1 - p) ** 3;
       this.camera.position.lerpVectors(this.tween.fromPos, this.tween.toPos, e);
       this.controls.target.lerpVectors(this.tween.fromTarget, this.tween.toTarget, e);
@@ -543,7 +589,7 @@ export class PackageViewer {
     };
   }
 
-  set autoRotate(v) { this.controls.autoRotate = v; }
+  set autoRotate(v) { this.controls.autoRotate = v && !REDUCED_MOTION; }
   get autoRotate() { return this.controls.autoRotate; }
 
   snapshot() {

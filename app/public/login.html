@@ -14,35 +14,57 @@
   <title>Iniciar sesión · PackLab</title>
 </head>
 <body>
-  <main class="auth-page">
-    <div class="auth-card card">
-      <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
-      <h1 data-title>Bienvenido a PackLab</h1>
-      <p class="sub" data-sub>Inicia sesión para acceder a todas las herramientas y comienza a diseñar tus empaques.</p>
-      <div class="alert alert-error hidden" data-error></div>
-      <form data-form novalidate>
-        <div class="field hidden" data-name-field>
-          <label for="name">Nombre o emprendimiento</label>
-          <input class="input" id="name" name="name" autocomplete="name" placeholder="Ej. Dulces Doña Rosa">
-        </div>
-        <div class="field">
-          <label for="email">Correo electrónico</label>
-          <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" required>
-        </div>
-        <div class="field">
-          <label for="password">Contraseña</label>
-          <div class="input-group">
-            <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6">
-            <button type="button" class="icon-btn" data-show-pass aria-label="Mostrar contraseña"></button>
+  <div class="auth-page">
+    <aside class="auth-aside" aria-hidden="true">
+      <a class="brand" href="/" tabindex="-1"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
+      <svg class="dieline" viewBox="0 0 300 220" fill="none" stroke="#2A1E14" stroke-width="1.6">
+        <path d="M10 70h70v80H10zM80 70h50v80H80zM130 70h70v80h-70zM200 70h50v80h-50z" fill="rgba(255,255,255,.28)"/>
+        <path d="M250 78l18 8v48l-18 8" />
+        <path d="M130 70V30h70v40M130 150v40h70v-40" fill="rgba(255,255,255,.18)"/>
+        <path d="M80 70l8-26h34l8 26M80 150l8 26h34l8-26M200 70l8-26h34l8 26M200 150l8 26h34l8-26"/>
+        <path d="M80 70v80M130 70v80M200 70v80M250 70v80M130 70h70M130 150h70" stroke="#983F20" stroke-dasharray="5 4"/>
+        <circle cx="165" cy="102" r="11" fill="#4A7C59" stroke="none"/>
+        <path d="M150 124h30M155 132h20" stroke-width="2.4"/>
+      </svg>
+      <div>
+        <h2>Tu idea, tu empaque, tu estilo</h2>
+        <p>Diseña, visualiza en 3D y exporta el plano troquelado de tu empaque en minutos.</p>
+      </div>
+    </aside>
+
+    <main class="auth-main" id="main">
+      <div class="auth-card">
+        <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
+        <h1 data-title>Bienvenido a PackLab</h1>
+        <p class="sub" data-sub>Inicia sesión para acceder a todas las herramientas y comienza a diseñar tus empaques.</p>
+        <div class="alert alert-error hidden" role="alert" data-error tabindex="-1"></div>
+        <form data-form novalidate>
+          <div class="field hidden" data-name-field>
+            <label for="name">Nombre o emprendimiento</label>
+            <input class="input" id="name" name="name" autocomplete="organization" placeholder="Ej. Dulces Doña Rosa" aria-describedby="name-error">
+            <div class="field-error" id="name-error" data-err="name"></div>
           </div>
-        </div>
-        <button class="btn btn-dark btn-block btn-lg" type="submit" data-submit>Iniciar sesión</button>
-      </form>
-      <div class="divider">o</div>
-      <button class="btn btn-outline btn-block" data-switch>Crear una cuenta</button>
-      <p class="demo-hint">Cuenta de prueba: <span class="mono">demo@packlab.com</span> / <span class="mono">packlab123</span></p>
-    </div>
-  </main>
+          <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" required aria-describedby="email-error">
+            <div class="field-error" id="email-error" data-err="email"></div>
+          </div>
+          <div class="field">
+            <label for="password">Contraseña</label>
+            <div class="input-group">
+              <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Mínimo 6 caracteres" required minlength="6" aria-describedby="password-error">
+              <button type="button" class="icon-btn" data-show-pass aria-label="Mostrar contraseña" aria-pressed="false"></button>
+            </div>
+            <div class="field-error" id="password-error" data-err="password"></div>
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" type="submit" data-submit>Iniciar sesión</button>
+        </form>
+        <div class="divider">o</div>
+        <button class="btn btn-outline btn-block" type="button" data-switch>Crear una cuenta</button>
+        <p class="demo-hint">¿Solo quieres probar? <button type="button" data-demo>Usar la cuenta de prueba</button> <span class="mono">demo@packlab.com</span></p>
+      </div>
+    </main>
+  </div>
   <script type="module" src="/js/login.js"></script>
 </body>
 </html>

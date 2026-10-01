@@ -15,18 +15,24 @@
 </head>
 <body>
   <div data-header></div>
-  <main class="container">
+  <main class="container" id="main">
     <div class="page-head">
-      <h1>Elige tu plantilla</h1>
+      <span class="eyebrow">Catálogo</span>
+      <h1 style="margin-top:12px">Elige tu plantilla</h1>
       <p class="muted">Selecciona una estructura y comienza a personalizarla.</p>
-      <div class="search">
-        <span data-search-icon></span>
-        <input class="input" type="search" placeholder="Buscar plantilla..." aria-label="Buscar plantilla" data-search>
+      <div class="toolbar">
+        <div class="search">
+          <span data-i="search"></span>
+          <label for="q" class="sr-only">Buscar plantilla</label>
+          <input class="input" id="q" type="search" placeholder="Buscar plantilla..." data-search autocomplete="off">
+        </div>
+        <div class="chips" data-chips role="group" aria-label="Filtrar por categoría"></div>
       </div>
-      <div class="chips" data-chips role="tablist"></div>
     </div>
+    <p class="result-count" data-count aria-live="polite"></p>
     <div class="grid" data-grid></div>
   </main>
+  <div data-footer></div>
   <script type="module" src="/js/catalog.js"></script>
 </body>
 </html>

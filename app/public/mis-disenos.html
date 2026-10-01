@@ -15,13 +15,19 @@
 </head>
 <body>
   <div data-header></div>
-  <main class="container">
-    <div class="page-head">
-      <h1>Mis diseños</h1>
-      <p class="muted">Aquí puedes encontrar todos tus empaques personalizados.</p>
+  <main class="container" id="main">
+    <div class="page-head row-head" style="margin:0">
+      <div>
+        <span class="eyebrow">Tu espacio</span>
+        <h1 style="margin-top:12px">Mis diseños</h1>
+        <p class="muted" style="margin:0">Aquí puedes encontrar todos tus empaques personalizados.</p>
+      </div>
+      <a class="btn btn-primary" href="/plantillas.html"><span data-i="sparkle"></span>Nuevo diseño</a>
     </div>
+    <p class="result-count" data-count aria-live="polite"></p>
     <div class="grid" data-grid></div>
   </main>
+  <div data-footer></div>
   <script type="module" src="/js/my-designs.js"></script>
 </body>
 </html>

@@ -14,97 +14,113 @@
   <title>Editor · PackLab</title>
 </head>
 <body class="editor-page">
+  <a class="skip-link" href="#props">Saltar a las propiedades</a>
   <header class="editor-top">
-    <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
-    <input class="input name-input" data-name aria-label="Nombre del diseño" maxlength="120">
-    <span class="save-state" data-save-state></span>
+    <a class="brand" href="/" aria-label="PackLab, ir al inicio"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
+    <span class="sep" aria-hidden="true"></span>
+    <label for="design-name" class="sr-only">Nombre del diseño</label>
+    <input class="input name-input" id="design-name" data-name maxlength="120">
+    <span class="save-state" data-save-state role="status" aria-live="polite"></span>
     <div class="actions">
-      <button class="btn btn-outline btn-sm" data-save>Guardar diseño</button>
-      <button class="btn btn-dark btn-sm" data-preview>Vista previa</button>
+      <button class="btn btn-outline btn-sm" type="button" data-save title="Guardar (Ctrl+S)"><span data-i="check"></span>Guardar</button>
+      <button class="btn btn-dark btn-sm" type="button" data-preview><span data-i="eye"></span>Vista previa</button>
+      <button class="btn btn-primary btn-sm" type="button" data-export><span data-i="download"></span>Exportar</button>
     </div>
   </header>
 
   <div class="editor">
-    <aside class="tools">
-      <a class="back" href="/plantillas.html" data-back></a>
+    <nav class="tools" aria-label="Herramientas">
+      <a class="back" href="/plantillas.html" data-back aria-label="Volver al catálogo"></a>
       <h3>Herramientas</h3>
       <div data-tools></div>
-    </aside>
+      <div class="tools-tip"><strong>Consejo</strong>Arrastra el empaque para girarlo, o usa las flechas del teclado.</div>
+    </nav>
 
-    <section class="workspace">
-      <div class="view-tabs" role="tablist">
-        <button class="active" data-mode="3d" role="tab">Vista 3D</button>
-        <button data-mode="2d" role="tab">Plano 2D</button>
+    <section class="workspace" aria-label="Lienzo">
+      <div class="workspace-top">
+        <div class="view-tabs" role="tablist" aria-label="Modo de vista">
+          <button class="active" data-mode="3d" role="tab" aria-selected="true">Vista 3D</button>
+          <button data-mode="2d" role="tab" aria-selected="false">Plano 2D</button>
+        </div>
+        <div class="angles" data-angles role="group" aria-label="Ángulo de cámara"></div>
       </div>
       <div class="stage" data-stage>
-        <div class="flat hidden" data-flat><img alt="Plano troquelado del empaque" data-flat-img></div>
+        <div class="flat hidden" data-flat><img alt="Plano troquelado del empaque con líneas de corte y doblez" data-flat-img></div>
+        <div class="stage-dock" data-controls role="toolbar" aria-label="Controles de vista"></div>
       </div>
-      <div class="stage-controls" data-controls></div>
-      <div class="angles" data-angles></div>
-      <button class="btn btn-primary btn-block" data-export>Exportar diseño</button>
     </section>
 
-    <aside class="props">
-      <h2>Propiedades</h2>
-      <p class="dims" data-dims></p>
-
-      <div class="prop" id="p-color">
-        <label>Color del empaque</label>
-        <div class="swatches" data-swatches="color"></div>
+    <aside class="props" id="props" tabindex="-1" aria-label="Propiedades">
+      <div class="props-head">
+        <h2>Propiedades</h2>
+        <p class="dims" data-dims></p>
       </div>
 
       <div class="prop" id="p-text">
-        <label for="f-text">Texto</label>
+        <h3 class="prop-title"><span data-i="text"></span>Texto</h3>
+        <label for="f-text">Texto principal</label>
         <input class="input" id="f-text" data-field="text" placeholder="Ingresa tu texto" maxlength="40">
-        <div class="row"><input class="input" data-field="subtext" placeholder="Texto secundario (eslogan)" maxlength="60" aria-label="Texto secundario"></div>
-        <div class="row">
-          <span class="small-label">Fuente</span>
-          <select class="input grow" data-field="font" aria-label="Fuente"></select>
+        <div class="field" style="margin:12px 0 0">
+          <label for="f-subtext">Eslogan</label>
+          <input class="input" id="f-subtext" data-field="subtext" placeholder="Ej. Productos naturales" maxlength="60">
         </div>
         <div class="row">
-          <span class="small-label">Tamaño</span>
-          <input class="grow" type="range" min="12" max="64" data-field="fontSize" aria-label="Tamaño del texto">
-          <span class="pill" data-size-label></span>
+          <label class="small-label" for="f-font" style="margin:0">Fuente</label>
+          <select class="input grow" id="f-font" data-field="font"></select>
         </div>
         <div class="row">
-          <span class="small-label">Color</span>
-          <div class="swatches" data-swatches="textColor"></div>
+          <label class="small-label" for="f-size" style="margin:0">Tamaño</label>
+          <input class="grow" type="range" id="f-size" min="12" max="64" data-field="fontSize">
+          <span class="pill" data-size-label aria-hidden="true"></span>
         </div>
-        <div class="row" style="margin-top:12px"><span class="small-label">Posición</span></div>
-        <div class="row" data-position></div>
+        <div class="row">
+          <span class="small-label" id="lbl-tc">Color</span>
+          <div class="swatches" data-swatches="textColor" role="group" aria-labelledby="lbl-tc"></div>
+        </div>
+        <div class="row"><span class="small-label" id="lbl-pos">Posición</span></div>
+        <div class="seg-grid" style="margin-top:8px" data-position role="group" aria-labelledby="lbl-pos"></div>
       </div>
 
       <div class="prop" id="p-logo">
-        <label>Logo</label>
+        <h3 class="prop-title"><span data-i="logo"></span>Logo</h3>
         <div class="upload">
-          <label class="btn btn-outline btn-sm" style="margin:0">Subir logo<input type="file" accept="image/*" hidden data-upload="logo"></label>
-          <button class="btn btn-ghost btn-sm" data-remove="logo">Quitar</button>
+          <span class="upload-preview" data-preview-of="logo" aria-hidden="true"></span>
+          <label class="btn btn-outline btn-sm" style="margin:0"><span data-i="upload"></span>Subir logo<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="sr-only" data-upload="logo"></label>
+          <button class="icon-btn" type="button" data-remove="logo" aria-label="Quitar logo" title="Quitar logo"><span data-i="trash"></span></button>
         </div>
+        <p class="hint">PNG con fondo transparente se ve mejor. También puedes arrastrarlo aquí.</p>
+      </div>
+
+      <div class="prop" id="p-color">
+        <h3 class="prop-title"><span data-i="palette"></span>Color del empaque</h3>
+        <div class="swatches" data-swatches="color" role="group" aria-label="Color del empaque"></div>
       </div>
 
       <div class="prop" id="p-image">
-        <label>Imagen de fondo</label>
+        <h3 class="prop-title"><span data-i="image"></span>Imagen de fondo</h3>
         <div class="upload">
-          <label class="btn btn-outline btn-sm" style="margin:0">Subir imagen<input type="file" accept="image/*" hidden data-upload="image"></label>
-          <button class="btn btn-ghost btn-sm" data-remove="image">Quitar</button>
+          <span class="upload-preview" data-preview-of="image" aria-hidden="true"></span>
+          <label class="btn btn-outline btn-sm" style="margin:0"><span data-i="upload"></span>Subir imagen<input type="file" accept="image/png,image/jpeg,image/webp" class="sr-only" data-upload="image"></label>
+          <button class="icon-btn" type="button" data-remove="image" aria-label="Quitar imagen" title="Quitar imagen"><span data-i="trash"></span></button>
         </div>
+        <p class="hint">Cubre toda la cara frontal. Máximo 8 MB.</p>
       </div>
 
       <div class="prop" id="p-graphics">
-        <label>Elementos gráficos</label>
-        <div class="choice-grid" data-graphics></div>
-        <div class="row" style="margin-top:10px">
-          <span class="small-label">Color</span>
-          <div class="swatches" data-swatches="graphicColor"></div>
+        <h3 class="prop-title"><span data-i="shapes"></span>Elementos gráficos</h3>
+        <div class="choice-grid" data-graphics role="group" aria-label="Elemento gráfico"></div>
+        <div class="row">
+          <span class="small-label" id="lbl-gc">Color</span>
+          <div class="swatches" data-swatches="graphicColor" role="group" aria-labelledby="lbl-gc"></div>
         </div>
       </div>
 
       <div class="prop" id="p-background">
-        <label>Fondos</label>
-        <div class="chips" data-patterns style="margin-bottom:10px"></div>
+        <h3 class="prop-title"><span data-i="grid"></span>Fondos</h3>
+        <div class="chips" data-patterns role="group" aria-label="Patrón de fondo"></div>
         <div class="row">
-          <span class="small-label">Color</span>
-          <div class="swatches" data-swatches="patternColor"></div>
+          <span class="small-label" id="lbl-pc">Color</span>
+          <div class="swatches" data-swatches="patternColor" role="group" aria-labelledby="lbl-pc"></div>
         </div>
       </div>
     </aside>

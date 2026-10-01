@@ -13,68 +13,119 @@
   </script>
   <title>PackLab · Diseña el empaque de tu emprendimiento</title>
   <meta name="description" content="Elige una plantilla, personaliza tu empaque, visualízalo en 3D y exporta tu diseño para imprimir.">
+  <meta name="theme-color" content="#F9F6F0">
 </head>
 <body>
   <div data-header></div>
 
-  <main>
+  <main id="main">
     <section class="hero">
       <div class="container">
         <div>
-          <span class="badge">Hecho para emprendimientos de Milagro</span>
-          <h1 style="margin-top:14px">Crea un empaque único para tu emprendimiento</h1>
-          <p class="lead">Personaliza una plantilla, visualiza tu empaque en 3D y exporta tu diseño para llevarlo a imprimir.</p>
+          <span class="eyebrow">Diseño de empaques para emprendedores</span>
+          <h1>Crea un empaque <em>único</em> para tu emprendimiento</h1>
+          <p class="lead">Personaliza una plantilla, visualiza tu empaque en 3D y exporta tu diseño listo para llevarlo a imprimir. Sin saber de diseño.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" href="/plantillas.html">Comenzar a diseñar</a>
+            <a class="btn btn-primary btn-lg" href="/plantillas.html" data-cta-design>Comenzar a diseñar <span data-i="arrowRight"></span></a>
             <a class="btn btn-outline btn-lg" href="/plantillas.html">Ver plantillas</a>
           </div>
+          <ul class="hero-points">
+            <li><span data-i="check"></span>Gratis para empezar</li>
+            <li><span data-i="check"></span>Vista 3D en tiempo real</li>
+            <li><span data-i="check"></span>Plano listo para imprenta</li>
+          </ul>
         </div>
-        <div class="hero-stage" data-hero-stage aria-label="Empaques de ejemplo en 3D"></div>
+
+        <div class="configurator" aria-label="Prueba rápida del configurador">
+          <div class="hero-stage" data-hero-stage>
+            <span class="stage-hint"><span data-i="hand"></span>Arrastra para girar</span>
+          </div>
+          <div class="config-bar">
+            <div class="seg" role="group" aria-label="Tipo de empaque" data-hero-shapes></div>
+            <div class="swatches" role="group" aria-label="Color del empaque" data-hero-colors></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section how" id="como-funciona">
+    <section class="proof" aria-label="PackLab en números">
+      <div class="container" data-proof>
+        <div><strong data-count-templates>8</strong><span>plantillas de empaque</span></div>
+        <div><strong>3D</strong><span>vista previa en tiempo real</span></div>
+        <div><strong>3</strong><span>exportaciones gratuitas</span></div>
+        <div><strong>4 pasos</strong><span>de la idea a la imprenta</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="como-funciona">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
+          <span class="eyebrow">Cómo funciona</span>
           <h2>¿Cómo funciona PackLab?</h2>
           <p class="muted">Aprende en pocos pasos cómo crear, personalizar y exportar tu empaque.</p>
         </div>
         <div class="how-grid">
-          <div>
+          <div class="reveal">
             <div class="player" data-player>
-              <div class="player-caption" data-caption>Tutorial · 4 pasos</div>
+              <div class="player-caption" data-caption aria-live="polite">Tutorial · 4 pasos</div>
               <button class="player-play" data-play aria-label="Reproducir tutorial"></button>
               <div class="player-bar">
-                <button data-toggle aria-label="Reproducir/pausar"></button>
+                <button data-toggle aria-label="Reproducir tutorial"></button>
                 <span data-time>0:00 / 0:24</span>
-                <div class="progress"><span data-progress></span></div>
+                <div class="progress" role="progressbar" aria-label="Progreso del tutorial" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0" data-progressbar><span data-progress></span></div>
                 <button data-full aria-label="Pantalla completa"></button>
               </div>
             </div>
-            <div style="text-align:center;margin-top:20px">
-              <a class="btn btn-dark" href="/plantillas.html">Comenzar a diseñar</a>
-            </div>
           </div>
-          <ol class="steps" data-steps>
-            <li><span class="num">01</span><div><h3>Elige tu plantilla</h3><p>Selecciona el tipo de empaque que necesitas.</p></div></li>
-            <li><span class="num">02</span><div><h3>Personaliza</h3><p>Modifica colores, textos, logo y elementos gráficos.</p></div></li>
-            <li><span class="num">03</span><div><h3>Visualiza</h3><p>Observa tu empaque en 3D desde diferentes ángulos.</p></div></li>
-            <li><span class="num">04</span><div><h3>Exporta</h3><p>Obtén tu diseño terminado y llévalo a imprimir.</p></div></li>
+          <ol class="steps reveal" data-steps>
+            <li><span class="num">01</span><div><h3>Elige tu plantilla</h3><p>Selecciona el tipo de empaque que necesitas: caja, bolsa, frasco o etiqueta.</p></div></li>
+            <li><span class="num">02</span><div><h3>Personaliza</h3><p>Modifica colores, textos, logo y elementos gráficos con un clic.</p></div></li>
+            <li><span class="num">03</span><div><h3>Visualiza en 3D</h3><p>Gira tu empaque y revísalo desde todos los ángulos antes de imprimir.</p></div></li>
+            <li><span class="num">04</span><div><h3>Exporta</h3><p>Descarga el plano troquelado con líneas de corte y doblez.</p></div></li>
           </ol>
         </div>
       </div>
-      <div class="container features" data-features></div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Por qué PackLab</span>
+          <h2>Todo lo que tu marca necesita, en un solo lugar</h2>
+        </div>
+        <div class="features" data-features></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="row-head">
+          <div class="section-head reveal">
+            <span class="eyebrow">Plantillas</span>
+            <h2>Empieza con una plantilla</h2>
+            <p class="muted">Estructuras listas con medidas reales. Solo ponle tu estilo.</p>
+          </div>
+          <a class="btn btn-outline" href="/plantillas.html">Ver todas las plantillas <span data-i="arrowRight"></span></a>
+        </div>
+        <div class="grid" style="padding-bottom:0" data-featured></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Tu idea, tu empaque, tu estilo</h2>
+          <p>Dale a tus productos la presentación que merecen. Crea tu cuenta gratis y diseña tu primer empaque hoy.</p>
+          <div class="hero-actions" style="justify-content:center">
+            <a class="btn btn-primary btn-lg" href="/plantillas.html">Comenzar a diseñar</a>
+            <a class="btn btn-outline btn-lg" href="/login.html?modo=registro">Crear cuenta gratis</a>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <div class="flow" data-flow></div>
-      <p class="tagline">Tu idea, tu empaque, tu estilo</p>
-      <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
-    </div>
-  </footer>
-
+  <div data-footer></div>
   <script type="module" src="/js/home.js"></script>
 </body>
 </html>

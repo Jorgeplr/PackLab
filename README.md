@@ -18,6 +18,17 @@ El usuario elige una plantilla, la personaliza (colores, textos, logo, elementos
 
 Flujo: Inicio → Iniciar sesión → Catálogo → Elegir plantilla → Editor → Visualizar en 3D → Guardar → Exportar.
 
+## Diseño
+
+La interfaz se revisó con la guía **UI UX Pro Max** (estilo *Nature Distilled* + patrón *Interactive 3D Configurator*), manteniendo la paleta de la propuesta visual:
+
+- Paleta: terracota `#D96B43` (acentos) y `#B4512C` (botones, contraste 5.1:1), verde orgánico `#4A7C59`, azul `#2B5B84`, amarillo `#E2A036` y kraft `#DDBB99`.
+- Tipografía: DM Serif Display (títulos), Nunito (texto) y Space Mono (medidas).
+- Accesibilidad: contraste ≥ 4.5:1, foco visible, objetivos táctiles de 44 px, etiquetas en botones de icono, errores junto a cada campo, modal con foco atrapado, controles de teclado en el visor 3D (flechas y +/-) y respeto a `prefers-reduced-motion`.
+- Rendimiento: el visor 3D deja de renderizar cuando no está en pantalla o la pestaña está oculta.
+
+Los estilos están en `app/public/css/styles.css` (tokens de color, espaciado y movimiento en `:root`).
+
 ## Tecnologías
 
 - **Docker Compose**: `db` (MySQL 8.4), `app` (Node 22) y `adminer` (administrador web de la base de datos).

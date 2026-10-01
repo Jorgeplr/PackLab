@@ -1,6 +1,6 @@
 import { session, goToLogin } from './api.js';
 import { icons } from './icons.js';
-import { toast } from './layout.js';
+import { toast, hydrateIcons, busy } from './layout.js';
 import { setDraft, saveDesign, loadWorkingDesign } from './store.js';
 import { openExportModal } from './export-modal.js';
 import {
@@ -24,7 +24,8 @@ let mode = '3d';
 document.title = `${state.name} · Editor · PackLab`;
 
 // ---------- Estructura estática ----------
-$('[data-back]').innerHTML = `${icons.back} Volver al catálogo`;
+hydrateIcons();
+$('[data-back]').innerHTML = `${icons.back}<span>Volver al catálogo</span>`;
 $('[data-dims]').textContent = `${template.name} · ${template.width} × ${template.height} × ${template.depth} cm`;
 $('[data-name]').value = state.name;
 
@@ -36,11 +37,16 @@ const tools = [
   ['p-graphics', icons.shapes, 'Elementos gráficos'],
   ['p-background', icons.grid, 'Fondos'],
 ];
-$('[data-tools]').innerHTML = tools.map(([id, icon, label]) => `<button class="tool" data-target="${id}">${icon}${label}</button>`).join('');
+$('[data-tools]').innerHTML = tools.map(([id, icon, label]) => `<button type="button" class="tool" data-target="${id}" aria-controls="${id}">${icon}<span>${label}</span></button>`).join('');
+const setActiveTool = (id) => $$('.tool').forEach((t) => {
+  const on = t.dataset.target === id;
+  t.classList.toggle('active', on);
+  if (on) t.setAttribute('aria-current', 'true'); else t.removeAttribute('aria-current');
+});
 $('[data-tools]').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-target]');
   if (!btn) return;
-  $$('.tool').forEach((t) => t.classList.toggle('active', t === btn));
+  setActiveTool(btn.dataset.target);
   const section = document.getElementById(btn.dataset.target);
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   section.classList.remove('flash');
@@ -51,12 +57,17 @@ $('[data-tools]').addEventListener('click', (e) => {
 
 $('[data-field=font]').innerHTML = FONTS.map((f) => `<option value="${f.name}" style="font-family:'${f.name}'">${f.name}</option>`).join('');
 
+const COLOR_NAMES = {
+  '#DDBB99': 'Kraft', '#F3EFE8': 'Crema', '#FFFFFF': 'Blanco', '#D96B43': 'Terracota', '#4A7C59': 'Verde orgánico',
+  '#2B5B84': 'Azul', '#E2A036': 'Amarillo cálido', '#1F2A33': 'Carbón', '#3A3A3A': 'Gris oscuro',
+};
+const LIGHT = new Set(['#DDBB99', '#F3EFE8', '#FFFFFF', '#E2A036']);
 const textColors = ['#3A3A3A', '#FFFFFF', '#1F2A33', '#2B5B84', '#4A7C59', '#D96B43', '#E2A036'];
 const swatchSets = { color: COLORS, textColor: textColors, graphicColor: textColors, patternColor: ['#FFFFFF', '#1F2A33', '#D96B43', '#4A7C59', '#2B5B84', '#E2A036'] };
 $$('[data-swatches]').forEach((el) => {
   const key = el.dataset.swatches;
-  el.innerHTML = swatchSets[key].map((c) => `<button class="swatch" style="background:${c}" data-color="${c}" aria-label="Color ${c}"></button>`).join('')
-    + `<input type="color" aria-label="Color personalizado" data-custom>`;
+  el.innerHTML = swatchSets[key].map((c) => `<button type="button" class="swatch ${LIGHT.has(c) ? 'light' : ''}" style="background:${c}" data-color="${c}" aria-label="${COLOR_NAMES[c] || c}" title="${COLOR_NAMES[c] || c}"></button>`).join('')
+    + `<input type="color" aria-label="Elegir otro color" title="Otro color" data-custom>`;
   el.addEventListener('click', (e) => {
     const sw = e.target.closest('[data-color]');
     if (sw) set(key, sw.dataset.color);
@@ -69,7 +80,7 @@ const positions = [
   ['align', 'right', icons.alignRight, 'Alinear a la derecha'], ['valign', 'top', icons.alignTop, 'Arriba'],
   ['valign', 'middle', icons.alignMiddle, 'Al medio'], ['valign', 'bottom', icons.alignBottom, 'Abajo'],
 ];
-$('[data-position]').innerHTML = positions.map(([k, v, icon, label]) => `<button class="icon-btn" data-pos="${k}:${v}" aria-label="${label}" title="${label}">${icon}</button>`).join('');
+$('[data-position]').innerHTML = positions.map(([k, v, icon, label]) => `<button type="button" class="icon-btn" data-pos="${k}:${v}" aria-label="${label}" title="${label}">${icon}</button>`).join('');
 $('[data-position]').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-pos]');
   if (!btn) return;
@@ -77,14 +88,15 @@ $('[data-position]').addEventListener('click', (e) => {
   set(k, v);
 });
 
-$('[data-graphics]').innerHTML = `<button class="icon-btn" data-graphic="" title="Sin elemento" aria-label="Sin elemento">${icons.none}</button>`
-  + Object.keys(GRAPHICS).map((g) => `<button class="icon-btn" data-graphic="${g}" title="${g}" aria-label="Elemento ${g}">${graphicSVG(g)}</button>`).join('');
+const GRAPHIC_NAMES = { leaf: 'Hojas', star: 'Estrella', flower: 'Flor', heart: 'Corazón', sun: 'Sol', seal: 'Sello' };
+$('[data-graphics]').innerHTML = `<button type="button" class="icon-btn" data-graphic="" title="Sin elemento" aria-label="Sin elemento">${icons.none}</button>`
+  + Object.keys(GRAPHICS).map((g) => `<button type="button" class="icon-btn" data-graphic="${g}" title="${GRAPHIC_NAMES[g] || g}" aria-label="${GRAPHIC_NAMES[g] || g}">${graphicSVG(g)}</button>`).join('');
 $('[data-graphics]').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-graphic]');
   if (btn) set('graphic', btn.dataset.graphic || null);
 });
 
-$('[data-patterns]').innerHTML = PATTERNS.map((p) => `<button class="chip" data-pattern="${p.key}">${p.label}</button>`).join('');
+$('[data-patterns]').innerHTML = PATTERNS.map((p) => `<button type="button" class="chip" data-pattern="${p.key}">${p.label}</button>`).join('');
 $('[data-patterns]').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-pattern]');
   if (btn) set('pattern', btn.dataset.pattern);
@@ -118,18 +130,28 @@ function readImage(file, max = 900) {
 $$('[data-upload]').forEach((input) => input.addEventListener('change', async () => {
   const file = input.files[0];
   input.value = '';
-  if (!file) return;
-  if (file.size > 8 * 1024 * 1024) { toast('La imagen debe pesar menos de 8 MB.'); return; }
-  try {
-    set(input.dataset.upload, await readImage(file, input.dataset.upload === 'logo' ? 600 : 1200));
-  } catch {
-    toast('No se pudo leer la imagen.');
-  }
+  if (file) useFile(input.dataset.upload, file);
 }));
 $$('[data-remove]').forEach((btn) => btn.addEventListener('click', () => set(btn.dataset.remove, null)));
 
+async function useFile(key, file) {
+  if (!file || !file.type.startsWith('image/')) { toast('Elige un archivo de imagen (PNG, JPG o WebP).', { ok: false }); return; }
+  if (file.size > 8 * 1024 * 1024) { toast('La imagen debe pesar menos de 8 MB.', { ok: false }); return; }
+  try {
+    set(key, await readImage(file, key === 'logo' ? 600 : 1200));
+    toast(key === 'logo' ? 'Logo agregado' : 'Imagen agregada');
+  } catch {
+    toast('No se pudo leer la imagen.', { ok: false });
+  }
+}
+[['p-logo', 'logo'], ['p-image', 'image']].forEach(([id, key]) => {
+  const zone = document.getElementById(id);
+  zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('flash'); });
+  zone.addEventListener('drop', (e) => { e.preventDefault(); useFile(key, e.dataTransfer.files[0]); });
+});
+
 // ---------- Visor 3D / plano 2D ----------
-const viewer = new PackageViewer($('[data-stage]'));
+const viewer = new PackageViewer($('[data-stage]'), { label: `Vista 3D de ${template.name}` });
 
 const controls = [
   ['rotate', icons.rotate, 'Girar automáticamente'],
@@ -137,31 +159,39 @@ const controls = [
   ['zoom-out', icons.zoomOut, 'Alejar'],
   ['reset', icons.reset, 'Restablecer vista'],
 ];
-$('[data-controls]').innerHTML = controls.map(([k, icon, label]) => `<button class="icon-btn" data-ctrl="${k}" aria-label="${label}" title="${label}">${icon}</button>`).join('');
+$('[data-controls]').innerHTML = controls.map(([k, icon, label], i) => `${i === 1 ? '<span class="div" aria-hidden="true"></span>' : ''}<button type="button" class="icon-btn" data-ctrl="${k}" aria-label="${label}" title="${label}" ${k === 'rotate' ? 'aria-pressed="false"' : ''}>${icon}</button>`).join('');
 $('[data-controls]').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-ctrl]');
   if (!btn) return;
   const k = btn.dataset.ctrl;
-  if (k === 'rotate') { viewer.autoRotate = !viewer.autoRotate; btn.classList.toggle('active', viewer.autoRotate); }
+  if (k === 'rotate') {
+    viewer.autoRotate = !viewer.autoRotate;
+    btn.classList.toggle('active', viewer.autoRotate);
+    btn.setAttribute('aria-pressed', String(viewer.autoRotate));
+  }
   if (k === 'zoom-in') viewer.zoom(1.25);
   if (k === 'zoom-out') viewer.zoom(0.8);
-  if (k === 'reset') viewer.setView('iso');
+  if (k === 'reset') { viewer.setView('iso'); markAngle('iso'); }
 });
 
 const angles = [['front', 'Frente'], ['side', 'Lateral'], ['back', 'Atrás'], ['top', 'Superior'], ['iso', '3/4']];
-$('[data-angles]').innerHTML = angles.map(([k, label]) => `<button data-view="${k}" class="${k === 'iso' ? 'active' : ''}">${icons.box}<br>${label}</button>`).join('');
+$('[data-angles]').innerHTML = angles.map(([k, label]) => `<button type="button" data-view="${k}" aria-pressed="${k === 'iso'}">${icons.box}${label}</button>`).join('');
+const markAngle = (view) => $$('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
 $('[data-angles]').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-view]');
   if (!btn) return;
-  $$('[data-view]').forEach((b) => b.classList.toggle('active', b === btn));
+  markAngle(btn.dataset.view);
   if (mode !== '3d') setMode('3d');
   viewer.setView(btn.dataset.view);
 });
-$$('[data-angles] svg').forEach((s) => { s.style.width = '18px'; s.style.height = '18px'; });
 
 function setMode(next) {
   mode = next;
-  $$('[data-mode]').forEach((b) => b.classList.toggle('active', b.dataset.mode === mode));
+  $$('[data-mode]').forEach((b) => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+    b.setAttribute('aria-selected', String(b.dataset.mode === mode));
+  });
+  $('[data-controls]').classList.toggle('hidden', mode !== '3d');
   $('[data-flat]').classList.toggle('hidden', mode !== '2d');
   if (mode === '2d') renderFlat();
 }
@@ -181,20 +211,27 @@ function syncControls() {
   $('[data-size-label]').textContent = `${d.fontSize} px`;
   $$('[data-swatches]').forEach((el) => {
     const v = d[el.dataset.swatches];
-    el.querySelectorAll('[data-color]').forEach((s) => s.classList.toggle('active', s.dataset.color.toUpperCase() === String(v).toUpperCase()));
+    el.querySelectorAll('[data-color]').forEach((s) => s.setAttribute('aria-pressed', String(s.dataset.color.toUpperCase() === String(v).toUpperCase())));
     el.querySelector('[data-custom]').value = /^#[0-9a-f]{6}$/i.test(v) ? v : '#000000';
   });
   $$('[data-pos]').forEach((b) => {
     const [k, v] = b.dataset.pos.split(':');
-    b.classList.toggle('active', d[k] === v);
+    b.setAttribute('aria-pressed', String(d[k] === v));
   });
-  $$('[data-graphic]').forEach((b) => b.classList.toggle('active', (b.dataset.graphic || null) === (d.graphic || null)));
-  $$('[data-pattern]').forEach((b) => b.classList.toggle('active', b.dataset.pattern === d.pattern));
-  $('[data-remove=logo]').disabled = !d.logo;
-  $('[data-remove=image]').disabled = !d.image;
+  $$('[data-graphic]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.graphic || null) === (d.graphic || null))));
+  $$('[data-pattern]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pattern === d.pattern)));
+  ['logo', 'image'].forEach((k) => {
+    $(`[data-remove=${k}]`).disabled = !d[k];
+    $(`[data-preview-of=${k}]`).style.backgroundImage = d[k] ? `url("${d[k]}")` : '';
+  });
 }
 
-function setSaveState(text) { $('[data-save-state]').textContent = text; }
+const SAVE_TEXT = { saved: 'Guardado', saving: 'Guardando…', dirty: 'Cambios sin guardar', new: 'Sin guardar', error: 'Error al guardar' };
+function setSaveState(state) {
+  const el = $('[data-save-state]');
+  el.dataset.state = state;
+  el.textContent = SAVE_TEXT[state];
+}
 
 let renderTimer;
 function refresh() {
@@ -210,14 +247,15 @@ function refresh() {
 function set(key, value) {
   state.data[key] = value;
   dirty = true;
-  setSaveState(state.designId ? 'Cambios sin guardar' : 'Sin guardar');
+  setSaveState(state.designId ? 'dirty' : 'new');
   refresh();
 }
 
 $('[data-name]').addEventListener('input', (e) => {
   state.name = e.target.value.trim() || template.name;
   dirty = true;
-  setSaveState('Cambios sin guardar');
+  setSaveState(state.designId ? 'dirty' : 'new');
+  document.title = `${state.name} · Editor · PackLab`;
   setDraft(state);
 });
 
@@ -228,24 +266,23 @@ async function save({ silent = false } = {}) {
     goToLogin();
     return null;
   }
-  const btn = $('[data-save]');
-  btn.disabled = true;
-  setSaveState('Guardando...');
+  const restore = busy($('[data-save]'), 'Guardando');
+  setSaveState('saving');
   try {
     const thumbnail = await renderSnapshot(template, state.data, { width: 480, height: 360 });
     const saved = await saveDesign(state, thumbnail);
     state.designId = saved.id;
     dirty = false;
     history.replaceState(null, '', `?design=${saved.id}`);
-    setSaveState('Guardado');
+    setSaveState('saved');
     if (!silent) toast('Diseño guardado en Mis diseños');
     return saved.id;
   } catch (err) {
-    setSaveState('Error al guardar');
-    toast(err.message);
+    setSaveState('error');
+    toast(err.message, { ok: false });
     throw err;
   } finally {
-    btn.disabled = false;
+    restore();
   }
 }
 
@@ -271,8 +308,15 @@ $('[data-export]').addEventListener('click', () => openExportModal({
 
 window.addEventListener('beforeunload', () => setDraft(state));
 
-setSaveState(state.designId ? 'Guardado' : 'Sin guardar');
+setSaveState(state.designId ? 'saved' : 'new');
 syncControls();
 await viewer.setPackage(template, state.data);
 setDraft(state);
-document.querySelector('.tool')?.classList.add('active');
+
+// Resalta la herramienta de la sección visible en el panel de propiedades
+const spy = new IntersectionObserver((entries) => {
+  const top = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+  if (top) setActiveTool(top.target.id);
+}, { root: window.matchMedia('(max-width: 960px)').matches ? null : $('.props'), threshold: 0.6 });
+$$('.prop').forEach((p) => spy.observe(p));
+setActiveTool('p-text');

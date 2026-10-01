@@ -15,29 +15,33 @@
 </head>
 <body>
   <div data-header></div>
-  <main class="container">
-    <div class="page-head" style="padding-bottom:12px">
-      <a class="btn btn-ghost btn-sm" data-back style="padding-left:0"></a>
-      <h1 data-title>Vista previa de tu diseño</h1>
+  <main class="container" id="main">
+    <div class="page-head" style="padding-bottom:var(--s-4)">
+      <a class="breadcrumb" data-back></a>
+      <h1 data-title style="margin-top:4px">Vista previa de tu diseño</h1>
+      <p class="muted" data-subtitle style="margin:0"></p>
     </div>
     <div class="preview-layout">
-      <div>
-        <div class="stage preview-stage" data-stage></div>
-        <div class="stage-controls" style="margin-top:12px" data-controls></div>
+      <div class="stage preview-stage" data-stage>
+        <div class="stage-dock" data-controls role="toolbar" aria-label="Controles de vista"></div>
       </div>
-      <div class="thumbs" data-thumbs></div>
+      <div class="thumbs" data-thumbs role="group" aria-label="Ángulos"></div>
     </div>
     <div class="preview-footer">
-      <div>
-        <h3 data-ready-title>Tu empaque está listo</h3>
-        <p class="muted" style="margin:0" data-ready-sub>Revisa todos los ángulos de tu diseño antes de exportarlo.</p>
+      <div class="ready">
+        <span class="ready-ico" data-ready-ico aria-hidden="true"></span>
+        <div>
+          <h3 data-ready-title style="margin:0">Tu empaque está listo</h3>
+          <p class="muted" style="margin:0" data-ready-sub>Revisa todos los ángulos de tu diseño antes de exportarlo.</p>
+        </div>
       </div>
       <div class="btns">
         <a class="btn btn-outline" data-edit>Editar diseño</a>
-        <button class="btn btn-primary" data-export>Exportar diseño</button>
+        <button class="btn btn-primary" type="button" data-export>Exportar diseño</button>
       </div>
     </div>
   </main>
+  <div data-footer></div>
   <script type="module" src="/js/preview.js"></script>
 </body>
 </html>
