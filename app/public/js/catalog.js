@@ -4,7 +4,7 @@ import { renderHeader, renderFooter, hydrateIcons, initReveal, escapeHTML } from
 import { templateCardHTML, setThumb } from './cards.js';
 import { renderSnapshot, defaultDesign } from './packaging.js';
 
-renderHeader('plantillas');
+renderHeader('tienda');
 renderFooter();
 hydrateIcons();
 

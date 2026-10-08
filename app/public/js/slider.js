@@ -44,8 +44,8 @@ export function initSlider(root, { interval = 7000 } = {}) {
     schedule();
   }
 
-  root.querySelector('[data-prev]').addEventListener('click', () => show(index - 1));
-  root.querySelector('[data-next]').addEventListener('click', () => show(index + 1));
+  root.querySelector('[data-prev]')?.addEventListener('click', () => show(index - 1));
+  root.querySelector('[data-next]')?.addEventListener('click', () => show(index + 1));
   pauseBtn.addEventListener('click', () => setPaused(!paused));
   dots.addEventListener('click', (e) => {
     const i = dotBtns.indexOf(e.target.closest('.slider-dot'));

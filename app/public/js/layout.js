@@ -4,10 +4,12 @@ import { icons } from './icons.js';
 
 const links = [
   { href: '/', label: 'Inicio', key: 'inicio' },
-  { href: '/plantillas.html', label: 'Plantillas', key: 'plantillas' },
-  { href: '/#como-funciona', label: 'Cómo funciona', key: 'como' },
-  { href: '/mis-disenos.html', label: 'Mis diseños', key: 'mis-disenos' },
+  { href: '/#nosotros', label: 'Nosotros', key: 'nosotros' },
+  { href: '/#servicios', label: 'Servicio', key: 'servicio' },
+  { href: '/plantillas.html', label: 'Tienda', key: 'tienda' },
+  { href: '/blog.html', label: 'Blog', key: 'blog' },
 ];
+const footerLinks = [...links, { href: '/#como-funciona', label: 'Cómo funciona' }, { href: '/mis-disenos.html', label: 'Mis diseños' }];
 
 export const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -20,7 +22,8 @@ export function renderHeader(active) {
   if (!el) return;
   const user = session.user;
   const actions = user
-    ? `<div class="user-chip"><span class="avatar" aria-hidden="true">${escapeHTML(user.name.charAt(0).toUpperCase())}</span>
+    ? `<a class="btn btn-ghost btn-sm my-designs ${active === 'mis-disenos' ? 'active' : ''}" href="/mis-disenos.html" ${active === 'mis-disenos' ? 'aria-current="page"' : ''}>${icons.box}<span>Mis diseños</span></a>
+       <div class="user-chip"><span class="avatar" aria-hidden="true">${escapeHTML(user.name.charAt(0).toUpperCase())}</span>
          <span class="name">${escapeHTML(user.name.split(' ')[0])}</span></div>
        <button class="btn btn-ghost btn-sm" data-logout>Salir</button>`
     : `<a class="btn btn-dark btn-sm" href="/login.html">Iniciar sesión</a>
@@ -50,6 +53,23 @@ export function renderHeader(active) {
     e.currentTarget.setAttribute('aria-expanded', String(open));
   });
 
+  // En el inicio, el menú resalta la sección visible (Inicio, Nosotros, Servicio)
+  if (active === 'inicio' && 'IntersectionObserver' in window) {
+    const map = { nosotros: 'nosotros', servicios: 'servicio' };
+    const setActive = (key) => nav.querySelectorAll('a').forEach((a) => {
+      const on = a.getAttribute('href') === (key === 'inicio' ? '/' : `/#${Object.keys(map).find((k) => map[k] === key)}`);
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    const seen = new Map();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => seen.set(e.target.id, e.isIntersecting));
+      const current = ['servicios', 'nosotros'].find((id) => seen.get(id));
+      setActive(current ? map[current] : 'inicio');
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(map).forEach((id) => { const sec = document.getElementById(id); if (sec) io.observe(sec); });
+  }
+
   const header = el.querySelector('.site-header');
   const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -68,7 +88,7 @@ export function renderFooter() {
             <p class="tagline" style="margin-top:8px">Tu idea, tu empaque, tu estilo</p>
           </div>
           <nav aria-label="Pie de página">
-            ${links.map((l) => `<a href="${l.href}">${l.label}</a>`).join('')}
+            ${footerLinks.map((l) => `<a href="${l.href}">${l.label}</a>`).join('')}
           </nav>
           <p style="margin:0;font-size:.88rem">Hecho para emprendimientos de Milagro, Guayas.</p>
         </div>

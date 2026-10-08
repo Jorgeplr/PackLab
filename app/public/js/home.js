@@ -6,7 +6,7 @@ import { initTutorial } from './tutorial.js';
 import { initSlider } from './slider.js';
 import { PackageViewer, renderSnapshot, defaultDesign } from './packaging.js';
 
-renderHeader(location.hash === '#como-funciona' ? 'como' : 'inicio');
+renderHeader('inicio');
 renderFooter();
 hydrateIcons();
 
@@ -14,16 +14,20 @@ const $ = (s) => document.querySelector(s);
 initSlider($('[data-slider]'));
 
 $('[data-features]').innerHTML = [
-  ['terracota', icons.bulb, 'Creatividad', 'Plantillas, colores y elementos gráficos para expresar la identidad de tu marca.'],
-  ['verde', icons.rocket, 'Emprendimiento', 'Pensado para negocios de Milagro que quieren crecer sin depender de un diseñador.'],
-  ['azul', icons.pen, 'Personalización', 'Editor sencillo: cambia textos, sube tu logo y elige fondos en segundos.'],
-  ['amarillo', icons.box, 'Empaques reales', 'Medidas en centímetros y plano troquelado listo para la imprenta.'],
+  ['terracota', icons.box, 'Plantillas con medidas reales', 'Cajas, bolsas, frascos y etiquetas listas para personalizar. Ajusta ancho, alto y fondo en centímetros.'],
+  ['verde', icons.pen, 'Editor visual sencillo', 'Cambia colores, textos y fuentes, sube tu logo y mueve cada elemento arrastrándolo.'],
+  ['amarillo', icons.rotate, 'Visor 3D en tiempo real', 'Gira tu empaque y revísalo desde todos los ángulos antes de imprimir.'],
+  ['azul', icons.dieline, 'Plano troquelado', 'Descarga el plano con líneas de corte y doblez para llevarlo a cualquier imprenta.'],
 ].map(([tone, icon, title, text]) => `
   <article class="feature tone-${tone} reveal">
     <div class="ico">${icon}</div>
     <h3>${title}</h3>
     <p>${text}</p>
   </article>`).join('');
+
+$('[data-values]').innerHTML = [
+  [icons.bulb, 'Creatividad'], [icons.rocket, 'Emprendimiento'], [icons.pen, 'Personalización'], [icons.leaf, 'Empaques sostenibles'],
+].map(([icon, label]) => `<li>${icon}${label}</li>`).join('');
 
 const templates = await api('/templates').catch(() => []);
 const bySlug = Object.fromEntries(templates.map((t) => [t.slug, t]));

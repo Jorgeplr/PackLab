@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/img/logo-mark.png">
+  <link rel="preload" href="/vendor/fonts/nunito/files/nunito-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/vendor/fonts/montserrat/files/montserrat-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+  </script>
+  <title>Blog · PackLab</title>
+  <meta name="description" content="Consejos de empaque, materiales e impresión para emprendimientos.">
+</head>
+<body>
+  <div data-header></div>
+  <main class="container" id="main">
+    <div class="page-head">
+      <span class="eyebrow">Blog</span>
+      <h1 style="margin-top:12px">Ideas para que tu empaque venda más</h1>
+      <p class="muted">Consejos prácticos de diseño, materiales e impresión para emprendimientos.</p>
+    </div>
+
+    <div class="blog-grid">
+      <article class="card post reveal" id="claves-empaque">
+        <div class="post-img"><img src="/img/hero-1.jpg" alt="Cajas y bolsas PackLab con diseño orgánico" loading="lazy" width="1366" height="768"></div>
+        <div class="post-body">
+          <span class="post-tag">Diseño</span>
+          <h2>5 claves para un empaque que vende</h2>
+          <p class="muted">Tu empaque es lo primero que ve el cliente. Estos detalles hacen la diferencia en la percha.</p>
+          <details>
+            <summary>Leer artículo</summary>
+            <ol>
+              <li><strong>Tu marca, visible en 3 segundos.</strong> El nombre y el logo deben ser lo primero que se lea; evita saturar la cara frontal.</li>
+              <li><strong>Pocos colores, bien elegidos.</strong> Dos o tres colores de tu marca transmiten más que un arcoíris.</li>
+              <li><strong>Contraste en el texto.</strong> Texto oscuro sobre fondo claro (o al revés) para que se lea de lejos.</li>
+              <li><strong>Información útil atrás o al costado.</strong> Ingredientes, peso, contacto y redes sociales.</li>
+              <li><strong>Revísalo en 3D antes de imprimir.</strong> Así detectas textos cortados en los dobleces.</li>
+            </ol>
+          </details>
+        </div>
+      </article>
+
+      <article class="card post reveal" id="materiales">
+        <div class="post-img"><img src="/img/hero-2.jpg" alt="Bolsa kraft, vaso y cajas de comida con diseño PackLab" loading="lazy" width="1366" height="768"></div>
+        <div class="post-body">
+          <span class="post-tag">Materiales</span>
+          <h2>Kraft, cartulina o cartón: ¿cuál elegir?</h2>
+          <p class="muted">El material cambia la percepción de tu producto y su costo. Una guía rápida para decidir.</p>
+          <details>
+            <summary>Leer artículo</summary>
+            <ul>
+              <li><strong>Papel kraft:</strong> natural y ecológico; ideal para café, panadería y productos artesanales. Los colores se ven más apagados.</li>
+              <li><strong>Cartulina blanca (plegadiza):</strong> colores vivos y buena impresión; perfecta para cosméticos y regalos.</li>
+              <li><strong>Cartón corrugado:</strong> resistente; para envíos, cajas de comida y productos pesados.</li>
+            </ul>
+            <p>Consejo: si usas kraft, elige colores oscuros para el texto (como el café) para que resalten.</p>
+          </details>
+        </div>
+      </article>
+
+      <article class="card post reveal" id="imprenta">
+        <div class="post-img"><img src="/img/hero-3.jpg" alt="Plano troquelado de una caja PackLab junto al visor 3D" loading="lazy" width="1366" height="768"></div>
+        <div class="post-body">
+          <span class="post-tag">Impresión</span>
+          <h2>Cómo llevar tu diseño a la imprenta</h2>
+          <p class="muted">Exportaste tu plano troquelado. Esto es lo que debes revisar antes de imprimir.</p>
+          <details>
+            <summary>Leer artículo</summary>
+            <ol>
+              <li>Descarga el <strong>plano troquelado</strong> desde PackLab: las líneas continuas son de <em>corte</em> y las punteadas de <em>doblez</em>.</li>
+              <li>Confirma las <strong>medidas</strong> (ancho × alto × fondo) con la imprenta.</li>
+              <li>Pide una <strong>prueba impresa</strong> antes del tiraje completo y ármala para comprobar los dobleces.</li>
+              <li>Pregunta por el <strong>material</strong> y el acabado (mate, brillante, barniz).</li>
+            </ol>
+            <p><a href="/plantillas.html">Elige una plantilla y empieza tu diseño →</a></p>
+          </details>
+        </div>
+      </article>
+    </div>
+  </main>
+  <div data-footer></div>
+  <script type="module">
+    import { renderHeader, renderFooter, initReveal } from '/js/layout.js';
+    renderHeader('blog');
+    renderFooter();
+    initReveal();
+  </script>
+</body>
+</html>

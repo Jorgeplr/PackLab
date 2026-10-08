@@ -8,9 +8,10 @@ El usuario elige una plantilla, la personaliza (colores, textos, logo, elementos
 
 | # | Pantalla | Ruta |
 |---|----------|------|
-| 1 | Página de inicio + tutorial animado | `/` |
+| 1 | Inicio: carrusel, Nosotros, Servicio, configurador 3D, tutorial animado | `/` |
 | 2 | Inicio de sesión / registro | `/login.html` |
-| 3 | Catálogo de plantillas (filtros y búsqueda) | `/plantillas.html` |
+| 3 | Tienda: catálogo de plantillas (filtros y búsqueda) | `/plantillas.html` |
+| — | Blog con consejos de empaque | `/blog.html` |
 | 4 | Editor (visor 3D, cara frontal editable y plano 2D; medidas, deshacer/rehacer) | `/editor.html?template=caja-rectangular` |
 | 5 | Vista previa | `/vista-previa.html?design=ID` |
 | 6 | Exportación (modal: plano troquelado, cara frontal o vista 3D en PNG) | desde el editor, la vista previa o Mis diseños |

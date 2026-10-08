@@ -5,7 +5,7 @@ import { setDraft, loadWorkingDesign } from './store.js';
 import { openExportModal } from './export-modal.js';
 import { PackageViewer, renderSnapshot, defaultDesign, effectiveTemplate } from './packaging.js';
 
-renderHeader('plantillas');
+renderHeader('tienda');
 renderFooter();
 const $ = (s) => document.querySelector(s);
 const params = new URLSearchParams(location.search);
