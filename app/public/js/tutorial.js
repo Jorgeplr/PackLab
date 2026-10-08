@@ -25,13 +25,13 @@ export function initTutorial(root, stepsList, bySlug) {
     </div>
     <div class="tut-panel">
       <div class="tut-row"><small>Color</small><div class="tut-sw">
-        ${['#DDBB99', '#F3EFE8', '#4A7C59', '#D96B43'].map((c) => `<i data-sw="${c}" style="background:${c}"></i>`).join('')}
+        ${['#F6E1C8', '#F0BE88', '#C0532D', '#5B7B52'].map((c) => `<i data-sw="${c}" style="background:${c}"></i>`).join('')}
       </div></div>
       <div class="tut-row"><small>Texto</small><div class="tut-input"><span data-typed></span><b class="caret"></b></div></div>
       <div class="tut-row"><small>Gráficos</small><div class="tut-icons">
-        ${['leaf', 'star', 'flower', 'heart'].map((g) => `<i data-gr="${g}">${graphicSVG(g)}</i>`).join('')}
+        ${['branch', 'leaf', 'flower', 'heart'].map((g) => `<i data-gr="${g}">${graphicSVG(g)}</i>`).join('')}
       </div></div>
-      <div class="tut-row"><small>Fondo</small><div class="tut-chips"><i data-pt="none">Liso</i><i data-pt="dots">Puntos</i><i data-pt="stripes">Rayas</i></div></div>
+      <div class="tut-row"><small>Fondo</small><div class="tut-chips"><i data-pt="none">Liso</i><i data-pt="organic">Orgánico</i><i data-pt="dots">Puntos</i></div></div>
     </div>
     <div class="tut-badge" data-badge></div>
     <div class="tut-export">
@@ -101,18 +101,18 @@ export function initTutorial(root, stepsList, bySlug) {
       viewer.autoRotate = true;
     }],
     [6.0, () => L('.tut-panel').classList.add('show')],
-    [6.6, () => moveTo(L('[data-sw="#4A7C59"]'))],
-    [7.2, () => { click(L('[data-sw="#4A7C59"]')); set({ color: '#4A7C59', textColor: '#FFFFFF' }); }],
+    [6.6, () => moveTo(L('[data-sw="#F6E1C8"]'))],
+    [7.2, () => { click(L('[data-sw="#F6E1C8"]')); set({ color: '#F6E1C8', textColor: '#6A2D13' }); }],
     [7.8, () => moveTo(L('.tut-input'), 0.25)],
     [8.1, () => { click(L('.tut-input')); L('.tut-input').classList.add('focus'); }],
     ...[...typed].map((_, i) => [8.3 + i * 0.16, () => {
       L('[data-typed]').textContent = typed.slice(0, i + 1);
       set({ text: typed.slice(0, i + 1) });
     }]),
-    [9.8, () => { L('.tut-input').classList.remove('focus'); moveTo(L('[data-gr="leaf"]')); }],
-    [10.3, () => { click(L('[data-gr="leaf"]')); set({ graphic: 'leaf', graphicColor: '#E2A036' }); }],
-    [10.9, () => moveTo(L('[data-pt="dots"]'))],
-    [11.4, () => { click(L('[data-pt="dots"]')); set({ pattern: 'dots', patternColor: '#FFFFFF', subtext: 'Productos naturales' }); }],
+    [9.8, () => { L('.tut-input').classList.remove('focus'); moveTo(L('[data-gr="branch"]')); }],
+    [10.3, () => { click(L('[data-gr="branch"]')); set({ graphic: 'branch', graphicColor: '#6A2D13' }); }],
+    [10.9, () => moveTo(L('[data-pt="organic"]'))],
+    [11.4, () => { click(L('[data-pt="organic"]')); set({ pattern: 'organic', patternColor: '#E9A27A', subtext: 'Productos naturales' }); }],
     [12.4, () => { L('.tut-panel').classList.remove('show'); hideCursor(); prepareDieline(); }],
     [13.0, () => { viewer.autoRotate = false; viewer.setView('front'); badge('Frente'); }],
     [14.5, () => { viewer.setView('side'); badge('Lateral'); }],

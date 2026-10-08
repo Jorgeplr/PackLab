@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/img/logo-mark.png">
   <link rel="preload" href="/vendor/fonts/nunito/files/nunito-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/vendor/fonts/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/vendor/fonts/montserrat/files/montserrat-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/fonts.css">
   <link rel="stylesheet" href="/css/styles.css">
   <script type="importmap">
@@ -16,16 +17,7 @@
 <body>
   <div class="auth-page">
     <aside class="auth-aside" aria-hidden="true">
-      <a class="brand" href="/" tabindex="-1"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
-      <svg class="dieline" viewBox="0 0 300 220" fill="none" stroke="#2A1E14" stroke-width="1.6">
-        <path d="M10 70h70v80H10zM80 70h50v80H80zM130 70h70v80h-70zM200 70h50v80h-50z" fill="rgba(255,255,255,.28)"/>
-        <path d="M250 78l18 8v48l-18 8" />
-        <path d="M130 70V30h70v40M130 150v40h70v-40" fill="rgba(255,255,255,.18)"/>
-        <path d="M80 70l8-26h34l8 26M80 150l8 26h34l8-26M200 70l8-26h34l8 26M200 150l8 26h34l8-26"/>
-        <path d="M80 70v80M130 70v80M200 70v80M250 70v80M130 70h70M130 150h70" stroke="#983F20" stroke-dasharray="5 4"/>
-        <circle cx="165" cy="102" r="11" fill="#4A7C59" stroke="none"/>
-        <path d="M150 124h30M155 132h20" stroke-width="2.4"/>
-      </svg>
+      <a class="brand" href="/" aria-label="PackLab, ir al inicio" tabindex="-1"><img class="brand-logo" src="/img/logo.png" alt="" width="115" height="40"><img class="brand-mark" src="/img/logo-mark.png" alt="" width="40" height="40"></a>
       <div>
         <h2>Tu idea, tu empaque, tu estilo</h2>
         <p>Diseña, visualiza en 3D y exporta el plano troquelado de tu empaque en minutos.</p>
@@ -34,7 +26,7 @@
 
     <main class="auth-main" id="main">
       <div class="auth-card">
-        <a class="brand" href="/"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>
+        <a class="brand" href="/" aria-label="PackLab, ir al inicio"><img class="brand-logo" src="/img/logo.png" alt="" width="115" height="40"><img class="brand-mark" src="/img/logo-mark.png" alt="" width="40" height="40"></a>
         <h1 data-title>Bienvenido a PackLab</h1>
         <p class="sub" data-sub>Inicia sesión para acceder a todas las herramientas y comienza a diseñar tus empaques.</p>
         <div class="alert alert-error hidden" role="alert" data-error tabindex="-1"></div>

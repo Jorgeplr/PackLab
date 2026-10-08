@@ -9,14 +9,14 @@ const categories = [
 ];
 
 const templates = [
-  { cat: 'cajas', name: 'Caja rectangular', slug: 'caja-rectangular', shape: 'box', width: 20, height: 14, depth: 10, base_color: '#DDBB99', description: 'Caja clásica de cartón para productos en general.' },
-  { cat: 'cajas', name: 'Caja tipo maletín', slug: 'caja-maletin', shape: 'case', width: 18, height: 14, depth: 9, base_color: '#E8E4DC', description: 'Caja con asa, ideal para regalos y llevar.' },
-  { cat: 'cajas', name: 'Caja de regalo', slug: 'caja-regalo', shape: 'gift', width: 15, height: 12, depth: 15, base_color: '#F3EFE8', description: 'Caja cuadrada con lazo para ocasiones especiales.' },
-  { cat: 'bolsas', name: 'Bolsa de papel', slug: 'bolsa-papel', shape: 'bag', width: 22, height: 28, depth: 10, base_color: '#C9A47A', description: 'Bolsa kraft con asas para tiendas y ferias.' },
-  { cat: 'alimentos', name: 'Caja de alimentos', slug: 'caja-alimentos', shape: 'food', width: 22, height: 9, depth: 16, base_color: '#F5F1EA', description: 'Caja con tapa para comida, postres o snacks.' },
-  { cat: 'frascos', name: 'Frasco', slug: 'frasco', shape: 'jar', width: 9, height: 12, depth: 9, base_color: '#EDEDED', description: 'Frasco con etiqueta envolvente para conservas o cosmética.' },
+  { cat: 'cajas', name: 'Caja rectangular', slug: 'caja-rectangular', shape: 'box', width: 20, height: 14, depth: 10, base_color: '#DDB48C', description: 'Caja clásica de cartón para productos en general.' },
+  { cat: 'cajas', name: 'Caja tipo maletín', slug: 'caja-maletin', shape: 'case', width: 18, height: 14, depth: 9, base_color: '#F6E1C8', description: 'Caja con asa, ideal para regalos y llevar.' },
+  { cat: 'cajas', name: 'Caja de regalo', slug: 'caja-regalo', shape: 'gift', width: 15, height: 12, depth: 15, base_color: '#E9A99B', description: 'Caja cuadrada con lazo para ocasiones especiales.' },
+  { cat: 'bolsas', name: 'Bolsa de papel', slug: 'bolsa-papel', shape: 'bag', width: 22, height: 28, depth: 10, base_color: '#C99A6B', description: 'Bolsa kraft con asas para tiendas y ferias.' },
+  { cat: 'alimentos', name: 'Caja de alimentos', slug: 'caja-alimentos', shape: 'food', width: 22, height: 9, depth: 16, base_color: '#F0BE88', description: 'Caja con tapa para comida, postres o snacks.' },
+  { cat: 'frascos', name: 'Frasco', slug: 'frasco', shape: 'jar', width: 9, height: 12, depth: 9, base_color: '#F3ECE4', description: 'Frasco con etiqueta envolvente para conservas o cosmética.' },
   { cat: 'etiquetas', name: 'Etiqueta rectangular', slug: 'etiqueta-rectangular', shape: 'label', width: 10, height: 6, depth: 0.2, base_color: '#FFFFFF', description: 'Etiqueta adhesiva para botellas, frascos o bolsas.' },
-  { cat: 'otros', name: 'Caja alta (botella)', slug: 'caja-alta', shape: 'box', width: 9, height: 26, depth: 9, base_color: '#2B5B84', description: 'Caja vertical para botellas, velas o perfumes.' },
+  { cat: 'otros', name: 'Caja alta (botella)', slug: 'caja-alta', shape: 'box', width: 9, height: 26, depth: 9, base_color: '#F6E1C8', description: 'Caja vertical para botellas, velas o perfumes.' },
 ];
 
 exports.seed = async (knex) => {

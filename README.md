@@ -20,14 +20,14 @@ Flujo: Inicio → Iniciar sesión → Catálogo → Elegir plantilla → Editor 
 
 ## Diseño
 
-La interfaz se revisó con la guía **UI UX Pro Max** (estilo *Nature Distilled* + patrón *Interactive 3D Configurator*), manteniendo la paleta de la propuesta visual:
+La interfaz sigue la **guía de marca de PackLab** (logo e imágenes en `app/public/img/`), revisada con la guía **UI UX Pro Max**:
 
-- Paleta: terracota `#D96B43` (acentos) y `#B4512C` (botones, contraste 5.1:1), verde orgánico `#4A7C59`, azul `#2B5B84`, amarillo `#E2A036` y kraft `#DDBB99`.
-- Tipografía: DM Serif Display (títulos), Nunito (texto) y Space Mono (medidas), alojadas en el propio servidor con `@fontsource` (`app/public/css/fonts.css`); no se depende de Google Fonts.
-- Accesibilidad: contraste ≥ 4.5:1, foco visible, objetivos táctiles de 44 px, etiquetas en botones de icono, errores junto a cada campo, modal con foco atrapado, controles de teclado en el visor 3D (flechas y +/-) y respeto a `prefers-reduced-motion`.
-- Rendimiento: el visor 3D deja de renderizar cuando no está en pantalla o la pestaña está oculta.
-
-Los estilos están en `app/public/css/styles.css` (tokens de color, espaciado y movimiento en `:root`).
+- **Logo**: `img/logo.png` (horizontal) e `img/logo-mark.png` (ícono, también favicon).
+- **Paleta**: terracota `#C0532D` (botones `#A9461F`, contraste 5.9:1), durazno `#F0BE88`, kraft `#DDB48C`, crema `#FAF3EA`, café `#6A2D13` (color del logotipo, títulos y botones oscuros) y verde salvia `#5B7B52`.
+- **Tipografía**: Montserrat (títulos, como el logotipo), Nunito (texto) y Space Mono (medidas), alojadas en el propio servidor con `@fontsource` (`app/public/css/fonts.css`).
+- **Inicio**: carrusel con las imágenes de la marca (pausable, con flechas, puntos, teclado y gesto de deslizar; sin autoplay con *reducir movimiento*).
+- **Editor**: colores de la marca, fondo **Orgánico** (manchas como en los empaques de la guía) y gráfico **Rama** en línea.
+- Accesibilidad: contraste ≥ 4.5:1, foco visible, objetivos táctiles de 44 px, controles de teclado en el visor 3D y respeto a `prefers-reduced-motion`.
 
 ## Editor
 

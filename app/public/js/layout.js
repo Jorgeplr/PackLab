@@ -12,7 +12,7 @@ const links = [
 export const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function brandHTML() {
-  return '<a class="brand" href="/" aria-label="PackLab, ir al inicio"><img src="/img/logo.svg" alt=""><span>PackLab</span></a>';
+  return '<a class="brand" href="/" aria-label="PackLab, ir al inicio"><img class="brand-logo" src="/img/logo.png" alt="" width="115" height="40"><img class="brand-mark" src="/img/logo-mark.png" alt="" width="40" height="40"></a>';
 }
 
 export function renderHeader(active) {

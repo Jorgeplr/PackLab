@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 export const FONTS = [
+  { name: 'Montserrat', weight: 800 },
   { name: 'DM Serif Display', weight: 400 },
   { name: 'Nunito', weight: 800 },
   { name: 'Montserrat Alternates', weight: 600 },
@@ -14,9 +15,12 @@ export const FONTS = [
   { name: 'Space Mono', weight: 700 },
 ];
 
-export const COLORS = ['#DDBB99', '#F3EFE8', '#FFFFFF', '#D96B43', '#4A7C59', '#2B5B84', '#E2A036', '#1F2A33'];
+// Paleta de la guía de marca: crema, durazno, kraft, blanco, rosa, terracota, salvia y café.
+export const COLORS = ['#F6E1C8', '#F0BE88', '#DDB48C', '#FFFFFF', '#E9A99B', '#C0532D', '#5B7B52', '#6A2D13'];
 
 export const GRAPHICS = {
+  // Rama en línea (estilo ilustración de la guía de marca)
+  branch: '<g fill="none" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21.5C9 15.5 12.3 9.3 18.5 2.5"/><path d="M9.3 15.6C6.6 16 4.6 14.5 4 11.9c2.6-.3 4.7 1.2 5.3 3.7z"/><path d="M7.8 18.6c-2.4 1-4.5.4-5.7-1.6 2.4-.9 4.4-.3 5.7 1.6z"/><path d="M11.4 12.3c-.6-2.7.5-4.9 3-6 .6 2.6-.5 4.8-3 6z"/><path d="M12.8 10.6c2.6-1 5-.2 6.3 2.1-2.6.9-4.9 0-6.3-2.1z"/><path d="M15.6 6.6c0-2.3 1.4-3.8 3.7-4.1-.1 2.3-1.4 3.7-3.7 4.1z"/></g>',
   leaf: '<path d="M12 2C8 6 8 12 12 16C16 12 16 6 12 2z"/><path d="M11 17C6 17 3 13 2 8C7 8 10 12 11 17z"/><path d="M13 17C18 17 21 13 22 8C17 8 14 12 13 17z"/><path d="M11.4 16h1.2v6h-1.2z"/>',
   star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
   flower: `<g transform="translate(12 12)">${[0, 60, 120, 180, 240, 300].map((a) => `<ellipse cx="0" cy="-5.5" rx="3" ry="5" transform="rotate(${a})"/>`).join('')}</g><circle cx="12" cy="12" r="2.6" fill="#fff" opacity=".85"/>`,
@@ -32,28 +36,29 @@ export const PATTERNS = [
   { key: 'grid', label: 'Cuadros' },
   { key: 'waves', label: 'Ondas' },
   { key: 'kraft', label: 'Kraft' },
+  { key: 'organic', label: 'Orgánico' },
 ];
 
 export function graphicSVG(key, color = 'currentColor') {
-  return `<svg viewBox="0 0 24 24" fill="${color}" aria-hidden="true">${GRAPHICS[key] || ''}</svg>`;
+  return `<svg viewBox="0 0 24 24" fill="${color}" stroke="${color}" stroke-width="0" aria-hidden="true">${GRAPHICS[key] || ''}</svg>`;
 }
 
 export function defaultDesign(template) {
   return {
-    color: template?.base_color || '#DDBB99',
+    color: template?.base_color || '#F6E1C8',
     text: 'TU MARCA',
     subtext: 'Productos naturales',
-    textColor: '#3A3A3A',
-    font: 'DM Serif Display',
+    textColor: '#6A2D13',
+    font: 'Montserrat',
     fontSize: 30,
     align: 'center',
     valign: 'middle',
     logo: null,
     image: null,
-    graphic: 'leaf',
-    graphicColor: '#4A7C59',
+    graphic: 'branch',
+    graphicColor: '#6A2D13',
     pattern: 'none',
-    patternColor: '#FFFFFF',
+    patternColor: '#E9A27A',
   };
 }
 
@@ -77,7 +82,7 @@ function loadImage(src) {
 
 function graphicImage(key, color) {
   if (!GRAPHICS[key]) return Promise.resolve(null);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="512" height="512" fill="${color}">${GRAPHICS[key]}</svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="512" height="512" fill="${color}" stroke="${color}" stroke-width="0">${GRAPHICS[key]}</svg>`;
   return loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`);
 }
 
@@ -162,6 +167,37 @@ function drawPattern(ctx, W, H, design, unit) {
       const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
       const n = Math.round((W * H) / (unit * unit * 60));
       for (let i = 0; i < n; i++) ctx.fillRect(rand() * W, rand() * H, unit * (0.6 + rand() * 1.4), unit * 0.6);
+      break;
+    }
+    case 'organic': {
+      // Manchas orgánicas en las esquinas, como en los empaques de la guía de marca
+      ctx.globalAlpha = 0.92;
+      const m = Math.min(W, H);
+      const colors = [design.patternColor, '#C0532D', '#5B7B52', '#F0BE88', '#E9A27A'];
+      const anchors = [[0.02, 0.98, 0.62], [1.0, 0.04, 0.5], [0.98, 0.9, 0.34], [0.08, 0.1, 0.24], [0.62, 1.04, 0.3]];
+      let seed = 11;
+      const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+      anchors.forEach(([ax, ay, k], i) => {
+        const cx = ax * W;
+        const cy = ay * H;
+        const r = k * m;
+        const n = 7;
+        const pts = Array.from({ length: n }, (_, j) => {
+          const a = (j / n) * Math.PI * 2;
+          const rr = r * (0.72 + rand() * 0.42);
+          return [cx + Math.cos(a) * rr, cy + Math.sin(a) * rr];
+        });
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.beginPath();
+        const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+        const start = mid(pts[n - 1], pts[0]);
+        ctx.moveTo(start[0], start[1]);
+        pts.forEach((p, j) => {
+          const q = mid(p, pts[(j + 1) % n]);
+          ctx.quadraticCurveTo(p[0], p[1], q[0], q[1]);
+        });
+        ctx.fill();
+      });
       break;
     }
     default:
@@ -775,7 +811,7 @@ export async function renderDieline(baseTemplate, design) {
   for (const { a, b, n } of edgesOf(pieces)) {
     ctx.beginPath();
     ctx.setLineDash(n > 1 ? [10, 7] : []);
-    ctx.strokeStyle = n > 1 ? '#D96B43' : '#1F2A33';
+    ctx.strokeStyle = n > 1 ? '#C0532D' : '#2B1D15';
     ctx.moveTo(tx(a[0]), ty(a[1]));
     ctx.lineTo(tx(b[0]), ty(b[1]));
     ctx.stroke();
@@ -789,7 +825,7 @@ export async function renderDieline(baseTemplate, design) {
   ctx.strokeStyle = '#1F2A33';
   ctx.beginPath(); ctx.moveTo(margin, ly); ctx.lineTo(margin + 40, ly); ctx.stroke();
   ctx.fillText('Corte', margin + 50, ly);
-  ctx.strokeStyle = '#D96B43';
+  ctx.strokeStyle = '#C0532D';
   ctx.setLineDash([10, 7]);
   ctx.beginPath(); ctx.moveTo(margin + 120, ly); ctx.lineTo(margin + 160, ly); ctx.stroke();
   ctx.setLineDash([]);

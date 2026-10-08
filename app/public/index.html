@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/img/logo-mark.png">
   <link rel="preload" href="/vendor/fonts/nunito/files/nunito-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/vendor/fonts/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/vendor/fonts/montserrat/files/montserrat-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/fonts.css">
   <link rel="stylesheet" href="/css/styles.css">
   <script type="importmap">
@@ -19,32 +20,59 @@
   <div data-header></div>
 
   <main id="main">
-    <section class="hero">
-      <div class="container">
-        <div>
-          <span class="eyebrow">Diseño de empaques para emprendedores</span>
-          <h1>Crea un empaque <em>único</em> para tu emprendimiento</h1>
-          <p class="lead">Personaliza una plantilla, visualiza tu empaque en 3D y exporta tu diseño listo para llevarlo a imprimir. Sin saber de diseño.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" href="/plantillas.html" data-cta-design>Comenzar a diseñar <span data-i="arrowRight"></span></a>
-            <a class="btn btn-outline btn-lg" href="/plantillas.html">Ver plantillas</a>
+    <section class="hero-slider" aria-roledescription="carrusel" aria-label="Destacados de PackLab" data-slider>
+      <div class="slides">
+        <article class="slide is-active" aria-roledescription="diapositiva" aria-label="1 de 4">
+          <img class="slide-img" src="/img/hero-1.jpg" alt="Cajas, bolsa kraft y bolsa de papel con el logo de PackLab junto a un monitor con el editor" width="1366" height="768" fetchpriority="high">
+          <div class="container slide-content">
+            <span class="eyebrow">Diseño de empaques para emprendedores</span>
+            <h1>Crea un empaque <em>único</em> para tu emprendimiento</h1>
+            <p class="lead">Personaliza una plantilla, visualiza tu empaque en 3D y exporta tu diseño listo para imprimir. Sin saber de diseño.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="/plantillas.html" data-cta-design>Comenzar a diseñar <span data-i="arrowRight"></span></a>
+              <a class="btn btn-outline btn-lg" href="/plantillas.html">Ver plantillas</a>
+            </div>
           </div>
-          <ul class="hero-points">
-            <li><span data-i="check"></span>Gratis para empezar</li>
-            <li><span data-i="check"></span>Vista 3D en tiempo real</li>
-            <li><span data-i="check"></span>Plano listo para imprenta</li>
-          </ul>
-        </div>
-
-        <div class="configurator" aria-label="Prueba rápida del configurador">
-          <div class="hero-stage" data-hero-stage>
-            <span class="stage-hint"><span data-i="hand"></span>Arrastra para girar</span>
+        </article>
+        <article class="slide" aria-roledescription="diapositiva" aria-label="2 de 4">
+          <img class="slide-img" src="/img/hero-2.jpg" alt="Bolsa, vaso, cinta y cajas de comida con diseño orgánico de PackLab y una laptop con el plano y la vista 3D" width="1366" height="768" loading="lazy">
+          <div class="container slide-content">
+            <span class="eyebrow">Todo tu negocio, una sola identidad</span>
+            <h2>Bolsas, cajas, frascos y etiquetas con <em>tu estilo</em></h2>
+            <p class="lead">Elige entre plantillas con medidas reales y aplica tus colores, tu logo y tus textos en minutos.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="/plantillas.html">Ver plantillas</a>
+            </div>
           </div>
-          <div class="config-bar">
-            <div class="seg" role="group" aria-label="Tipo de empaque" data-hero-shapes></div>
-            <div class="swatches" role="group" aria-label="Color del empaque" data-hero-colors></div>
+        </article>
+        <article class="slide" aria-roledescription="diapositiva" aria-label="3 de 4">
+          <img class="slide-img" src="/img/hero-3.jpg" alt="Visor 3D de una bolsa de café PackLab y su plano troquelado listo para imprimir" width="1366" height="768" loading="lazy">
+          <div class="container slide-content">
+            <span class="eyebrow">Visor 3D + plano troquelado</span>
+            <h2>Míralo en <em>360°</em> y descarga el corte para imprimir</h2>
+            <p class="lead">Revisa tu empaque desde todos los ángulos y exporta el plano con líneas de corte y doblez.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="/editor.html?template=caja-rectangular">Probar el editor</a>
+            </div>
           </div>
-        </div>
+        </article>
+        <article class="slide" aria-roledescription="diapositiva" aria-label="4 de 4">
+          <img class="slide-img" src="/img/hero-4.jpg" alt="Cajas de regalo, caja abierta con el mensaje Tu marca a otro nivel y caja con asa, todas con diseño PackLab" width="1366" height="768" loading="lazy">
+          <div class="container slide-content">
+            <span class="eyebrow">Tu marca a otro nivel</span>
+            <h2>Empaques que tus clientes <em>recuerdan</em></h2>
+            <p class="lead">Crea tu cuenta gratis, guarda tus diseños y llévalos a la imprenta cuando quieras.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="/login.html?modo=registro">Crear cuenta gratis</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="container slider-controls">
+        <button type="button" class="slider-btn" data-prev aria-label="Diapositiva anterior"><span data-i="back"></span></button>
+        <div class="slider-dots" role="group" aria-label="Elegir diapositiva" data-dots></div>
+        <button type="button" class="slider-btn" data-next aria-label="Diapositiva siguiente"><span data-i="arrowRight"></span></button>
+        <button type="button" class="slider-btn" data-pause aria-label="Pausar carrusel"></button>
       </div>
     </section>
 
@@ -54,6 +82,31 @@
         <div><strong>3D</strong><span>vista previa en tiempo real</span></div>
         <div><strong>3</strong><span>exportaciones gratuitas</span></div>
         <div><strong>4 pasos</strong><span>de la idea a la imprenta</span></div>
+      </div>
+    </section>
+
+    <section class="section try">
+      <div class="container try-grid">
+        <div class="reveal">
+          <span class="eyebrow">Pruébalo ahora</span>
+          <h2>Elige un empaque y cambia su color en vivo</h2>
+          <p class="muted">Así de fácil es personalizar en PackLab. Gira el modelo, prueba los colores de la marca y continúa en el editor cuando te guste.</p>
+          <ul class="hero-points">
+            <li><span data-i="check"></span>Gratis para empezar</li>
+            <li><span data-i="check"></span>Vista 3D en tiempo real</li>
+            <li><span data-i="check"></span>Plano listo para imprenta</li>
+          </ul>
+          <a class="btn btn-dark btn-lg" style="margin-top:24px" href="/editor.html?template=caja-rectangular" data-try-cta>Personalizar este empaque <span data-i="arrowRight"></span></a>
+        </div>
+        <div class="configurator reveal" aria-label="Prueba rápida del configurador">
+          <div class="hero-stage" data-hero-stage>
+            <span class="stage-hint"><span data-i="hand"></span>Arrastra para girar</span>
+          </div>
+          <div class="config-bar">
+            <div class="seg" role="group" aria-label="Tipo de empaque" data-hero-shapes></div>
+            <div class="swatches" role="group" aria-label="Color del empaque" data-hero-colors></div>
+          </div>
+        </div>
       </div>
     </section>
 

@@ -63,12 +63,12 @@ $('[data-tools]').addEventListener('click', (e) => {
 $('[data-field=font]').innerHTML = FONTS.map((f) => `<option value="${f.name}" style="font-family:'${f.name}'">${f.name}</option>`).join('');
 
 const COLOR_NAMES = {
-  '#DDBB99': 'Kraft', '#F3EFE8': 'Crema', '#FFFFFF': 'Blanco', '#D96B43': 'Terracota', '#4A7C59': 'Verde orgánico',
-  '#2B5B84': 'Azul', '#E2A036': 'Amarillo cálido', '#1F2A33': 'Carbón', '#3A3A3A': 'Gris oscuro',
+  '#F6E1C8': 'Crema', '#F0BE88': 'Durazno', '#DDB48C': 'Kraft', '#FFFFFF': 'Blanco', '#E9A99B': 'Rosa palo',
+  '#C0532D': 'Terracota', '#5B7B52': 'Verde salvia', '#6A2D13': 'Café', '#2B1D15': 'Café oscuro', '#E9A27A': 'Melocotón',
 };
-const LIGHT = new Set(['#DDBB99', '#F3EFE8', '#FFFFFF', '#E2A036']);
-const textColors = ['#3A3A3A', '#FFFFFF', '#1F2A33', '#2B5B84', '#4A7C59', '#D96B43', '#E2A036'];
-const swatchSets = { color: COLORS, textColor: textColors, graphicColor: textColors, patternColor: ['#FFFFFF', '#1F2A33', '#D96B43', '#4A7C59', '#2B5B84', '#E2A036'] };
+const LIGHT = new Set(['#F6E1C8', '#F0BE88', '#DDB48C', '#FFFFFF', '#E9A99B', '#E9A27A']);
+const textColors = ['#6A2D13', '#FFFFFF', '#2B1D15', '#C0532D', '#5B7B52', '#F0BE88'];
+const swatchSets = { color: COLORS, textColor: textColors, graphicColor: textColors, patternColor: ['#E9A27A', '#C0532D', '#5B7B52', '#F0BE88', '#FFFFFF', '#6A2D13'] };
 $$('[data-swatches]').forEach((el) => {
   const key = el.dataset.swatches;
   el.innerHTML = swatchSets[key].map((c) => `<button type="button" class="swatch ${LIGHT.has(c) ? 'light' : ''}" style="background:${c}" data-color="${c}" aria-label="${COLOR_NAMES[c] || c}" title="${COLOR_NAMES[c] || c}"></button>`).join('')
@@ -93,7 +93,7 @@ $('[data-position]').addEventListener('click', (e) => {
   setMany({ [k]: v, positions: null });
 });
 
-const GRAPHIC_NAMES = { leaf: 'Hojas', star: 'Estrella', flower: 'Flor', heart: 'Corazón', sun: 'Sol', seal: 'Sello' };
+const GRAPHIC_NAMES = { branch: 'Rama', leaf: 'Hojas', star: 'Estrella', flower: 'Flor', heart: 'Corazón', sun: 'Sol', seal: 'Sello' };
 $('[data-graphics]').innerHTML = `<button type="button" class="icon-btn" data-graphic="" title="Sin elemento" aria-label="Sin elemento">${icons.none}</button>`
   + Object.keys(GRAPHICS).map((g) => `<button type="button" class="icon-btn" data-graphic="${g}" title="${GRAPHIC_NAMES[g] || g}" aria-label="${GRAPHIC_NAMES[g] || g}">${graphicSVG(g)}</button>`).join('');
 $('[data-graphics]').addEventListener('click', (e) => {
