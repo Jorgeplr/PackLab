@@ -7,6 +7,7 @@ const links = [
   { href: '/#nosotros', label: 'Nosotros', key: 'nosotros' },
   { href: '/#servicios', label: 'Servicio', key: 'servicio' },
   { href: '/plantillas.html', label: 'Tienda', key: 'tienda' },
+  { href: '/planes.html', label: 'Planes', key: 'planes' },
   { href: '/blog.html', label: 'Blog', key: 'blog' },
 ];
 const footerLinks = [...links, { href: '/#como-funciona', label: 'Cómo funciona' }, { href: '/mis-disenos.html', label: 'Mis diseños' }];

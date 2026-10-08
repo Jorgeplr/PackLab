@@ -12,6 +12,7 @@ El usuario elige una plantilla, la personaliza (colores, textos, logo, elementos
 | 2 | Inicio de sesión / registro | `/login.html` |
 | 3 | Tienda: catálogo de plantillas (filtros y búsqueda) | `/plantillas.html` |
 | — | Blog con consejos de empaque | `/blog.html` |
+| — | Planes de pago y checkout (prototipo) | `/planes.html`, `/checkout.html?plan=premium` |
 | 4 | Editor (visor 3D, cara frontal editable y plano 2D; medidas, deshacer/rehacer) | `/editor.html?template=caja-rectangular` |
 | 5 | Vista previa | `/vista-previa.html?design=ID` |
 | 6 | Exportación (modal: plano troquelado, cara frontal o vista 3D en PNG) | desde el editor, la vista previa o Mis diseños |
@@ -29,6 +30,23 @@ La interfaz sigue la **guía de marca de PackLab** (logo e imágenes en `app/pub
 - **Inicio**: carrusel con las imágenes de la marca (pausable, con flechas, puntos, teclado y gesto de deslizar; sin autoplay con *reducir movimiento*).
 - **Editor**: colores de la marca, fondo **Orgánico** (manchas como en los empaques de la guía) y gráfico **Rama** en línea.
 - Accesibilidad: contraste ≥ 4.5:1, foco visible, objetivos táctiles de 44 px, controles de teclado en el visor 3D y respeto a `prefers-reduced-motion`.
+
+## Planes de pago (prototipo)
+
+> **Prototipo académico: la pasarela está simulada y no se realizan cobros.**
+
+| Plan | Precio (30 días) | Exportaciones |
+|------|------------------|---------------|
+| Gratis | — | 3 en total (`FREE_EXPORTS`) |
+| Básico | $5,99 | 15 |
+| Premium (más popular) | $9,99 | 50 |
+| Pro | $14,99 | ilimitadas |
+
+- Flujo: **Planes → Pago (tarjeta, PayPal o Mercado Pago) → ¡Pago exitoso!** El plan se activa por 30 días y reemplaza al anterior; la cuota de exportaciones depende del plan activo.
+- Tarjetas de prueba: `4242 4242 4242 4242` (aprobada) y `4000 0000 0000 0002` (rechazada), con cualquier fecha futura y CVC.
+- **Seguridad:** la tarjeta se valida en el navegador (Luhn, vencimiento, CVC) y al servidor solo llegan la marca, los últimos 4 dígitos y el vencimiento. Nunca se envía ni se guarda el número completo ni el CVC.
+- Tablas: `plans` (seed `03_plans.js`), `subscriptions` y `payments`. API: `GET /api/plans`, `GET /api/billing/me`, `GET /api/billing/payments`, `POST /api/billing/checkout`.
+- Para pasar a pagos reales se reemplaza la simulación de `src/routes/billing.js` por la pasarela elegida (Stripe, PayPal o Mercado Pago), usando sus formularios alojados para no manejar datos de tarjetas.
 
 ## Editor
 

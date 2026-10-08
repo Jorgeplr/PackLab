@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/img/logo-mark.png">
+  <link rel="preload" href="/vendor/fonts/nunito/files/nunito-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/vendor/fonts/montserrat/files/montserrat-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/build/three.module.js", "three/addons/": "/vendor/three/examples/jsm/" } }
+  </script>
+  <title>Pago · PackLab</title>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <div data-header></div>
+  <main class="container" id="main">
+    <div class="page-head" style="padding-bottom:var(--s-4)">
+      <a class="breadcrumb" href="/planes.html"><span data-i="back"></span>Volver a los planes</a>
+      <ol class="pay-steps" aria-label="Pasos" data-steps>
+        <li class="done"><span>1</span>Elige tu plan</li>
+        <li class="on"><span>2</span>Paga seguro</li>
+        <li><span>3</span>Plan activo</li>
+      </ol>
+    </div>
+
+    <div class="test-banner" role="note">
+      <span data-i="shield"></span>
+      <div><strong>Modo de prueba:</strong> no se realizan cobros ni se guardan datos de tarjetas.
+        Usa la tarjeta <span class="mono">4242 4242 4242 4242</span> (aprobada) o <span class="mono">4000 0000 0000 0002</span> (rechazada), con cualquier fecha futura y CVC.</div>
+    </div>
+
+    <div class="checkout" data-checkout>
+      <section class="card pay-card" aria-labelledby="pay-title">
+        <h1 id="pay-title" class="pay-title">Métodos de pago</h1>
+        <div class="pay-tabs" role="tablist" aria-label="Método de pago">
+          <button role="tab" type="button" id="tab-card" aria-controls="panel-card" aria-selected="true" data-tab="card"><span data-i="card"></span>Tarjeta</button>
+          <button role="tab" type="button" id="tab-paypal" aria-controls="panel-paypal" aria-selected="false" tabindex="-1" data-tab="paypal"><span class="pay-logo paypal">PayPal</span></button>
+          <button role="tab" type="button" id="tab-mercadopago" aria-controls="panel-mercadopago" aria-selected="false" tabindex="-1" data-tab="mercadopago"><span class="pay-logo mp">mercado pago</span></button>
+        </div>
+
+        <div class="alert alert-error hidden" role="alert" tabindex="-1" data-pay-error></div>
+
+        <form id="panel-card" role="tabpanel" aria-labelledby="tab-card" data-panel="card" novalidate autocomplete="off">
+          <div class="pay-logos small" aria-hidden="true"><span class="pay-logo visa">VISA</span><span class="pay-logo mastercard"><i></i><i></i></span><span class="pay-logo amex">AMEX</span></div>
+          <div class="field">
+            <label for="cc-number">Número de tarjeta</label>
+            <div class="input-group">
+              <input class="input mono" id="cc-number" inputmode="numeric" autocomplete="off" placeholder="1234 5678 9012 3456" maxlength="23" aria-describedby="cc-number-error" data-cc="number">
+              <span class="cc-brand" data-brand aria-live="polite"></span>
+            </div>
+            <div class="field-error" id="cc-number-error" data-err="number"></div>
+          </div>
+          <div class="field">
+            <label for="cc-name">Nombre en la tarjeta</label>
+            <input class="input" id="cc-name" autocomplete="off" placeholder="Como aparece en la tarjeta" aria-describedby="cc-name-error" data-cc="name">
+            <div class="field-error" id="cc-name-error" data-err="name"></div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cc-exp">Fecha de expiración</label>
+              <input class="input mono" id="cc-exp" inputmode="numeric" autocomplete="off" placeholder="MM / AA" maxlength="7" aria-describedby="cc-exp-error" data-cc="exp">
+              <div class="field-error" id="cc-exp-error" data-err="exp"></div>
+            </div>
+            <div class="field">
+              <label for="cc-cvc">CVC</label>
+              <input class="input mono" id="cc-cvc" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4" aria-describedby="cc-cvc-error" data-cc="cvc">
+              <div class="field-error" id="cc-cvc-error" data-err="cvc"></div>
+            </div>
+          </div>
+          <button class="btn btn-dark btn-lg btn-block" type="submit" data-pay>Pagar ahora</button>
+        </form>
+
+        <div id="panel-paypal" role="tabpanel" aria-labelledby="tab-paypal" class="wallet hidden" data-panel="paypal">
+          <p>Serás dirigido a PayPal para completar el pago de forma segura.</p>
+          <button class="btn btn-lg btn-block wallet-btn paypal-btn" type="button" data-wallet="paypal">Continuar con <span class="pay-logo paypal">PayPal</span></button>
+        </div>
+        <div id="panel-mercadopago" role="tabpanel" aria-labelledby="tab-mercadopago" class="wallet hidden" data-panel="mercadopago">
+          <p>Paga con tu cuenta de Mercado Pago, tarjetas guardadas o saldo disponible.</p>
+          <button class="btn btn-lg btn-block wallet-btn mp-btn" type="button" data-wallet="mercadopago">Continuar con Mercado Pago</button>
+        </div>
+        <p class="secure-note"><span data-i="lock"></span>Conexión cifrada. Tus datos no se almacenan.</p>
+      </section>
+
+      <aside class="card summary" aria-labelledby="sum-title" data-summary>
+        <h2 id="sum-title">Resumen</h2>
+        <div data-summary-body><div class="skeleton" style="height:120px;border-radius:12px"></div></div>
+      </aside>
+    </div>
+
+    <section class="card success hidden" data-success tabindex="-1" aria-labelledby="ok-title"></section>
+  </main>
+  <div data-footer></div>
+  <script type="module" src="/js/checkout.js"></script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 const express = require('express');
 const db = require('../db');
 const { requireAuth } = require('../auth');
+const { exportStatus } = require('../billing');
 
 const router = express.Router();
-const FREE_EXPORTS = Number(process.env.FREE_EXPORTS || 3);
 const EXPORT_FORMATS = ['png-cara', 'png-plano', 'png-3d'];
 
 router.use(requireAuth);
@@ -20,10 +20,6 @@ function baseQuery(userId) {
       't.slug as template_slug', 't.name as template_name', 't.shape');
 }
 
-async function exportStatus(userId) {
-  const { used } = await db('exports').where({ user_id: userId }).count({ used: '*' }).first();
-  return { used: Number(used), limit: FREE_EXPORTS, remaining: Math.max(0, FREE_EXPORTS - Number(used)) };
-}
 
 router.get('/', async (req, res) => {
   const rows = await baseQuery(req.user.id).orderBy('d.updated_at', 'desc');
@@ -77,8 +73,11 @@ router.post('/:id/exports', async (req, res) => {
   if (!design) return res.status(404).json({ error: 'Diseño no encontrado.' });
   const format = EXPORT_FORMATS.includes(req.body.format) ? req.body.format : 'png-cara';
   const status = await exportStatus(req.user.id);
-  if (status.remaining <= 0) {
-    return res.status(402).json({ error: `Usaste tus ${status.limit} exportaciones gratuitas.`, ...status });
+  if (!status.unlimited && status.remaining <= 0) {
+    const msg = status.plan.slug === 'gratis'
+      ? `Usaste tus ${status.limit} exportaciones gratuitas.`
+      : `Usaste las ${status.limit} exportaciones de tu ${status.plan.name}.`;
+    return res.status(402).json({ error: msg, upgrade: true, ...status });
   }
   await db('exports').insert({ user_id: req.user.id, design_id: design.id, format });
   res.status(201).json(await exportStatus(req.user.id));

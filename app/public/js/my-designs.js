@@ -107,5 +107,16 @@ grid.addEventListener('click', async (e) => {
 });
 document.addEventListener('click', closeMenus);
 
-designs = await api('/designs');
+const [list, plan] = await Promise.all([api('/designs'), api('/billing/me').catch(() => null)]);
+designs = list;
+if (plan) {
+  const pct = plan.unlimited ? 0 : Math.min(100, (plan.used / Math.max(1, plan.limit)) * 100);
+  const text = plan.unlimited ? 'Exportaciones ilimitadas' : `${plan.used} de ${plan.limit} exportaciones usadas`;
+  const bar = document.createElement('div');
+  bar.className = 'plan-bar';
+  bar.innerHTML = `<span><strong>${escapeHTML(plan.plan.name)}</strong> · ${text}${plan.plan.ends_at ? ` · vence el ${formatDate(plan.plan.ends_at)}` : ''}</span>
+    ${plan.unlimited ? '' : `<span class="meter" role="img" aria-label="${text}"><span style="width:${pct}%"></span></span>`}
+    <a class="btn btn-outline btn-sm" href="/planes.html">${plan.plan.slug === 'gratis' ? 'Mejorar plan' : 'Ver planes'}</a>`;
+  count.before(bar);
+}
 render();

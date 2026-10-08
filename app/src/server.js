@@ -14,6 +14,7 @@ app.get('/api/health', async (req, res) => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', require('./routes/catalog'));
 app.use('/api/designs', require('./routes/designs'));
+app.use('/api', require('./routes/billing'));
 
 app.use('/api', (req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));
 // eslint-disable-next-line no-unused-vars

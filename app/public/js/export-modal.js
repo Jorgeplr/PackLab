@@ -73,7 +73,8 @@ export async function openExportModal({ template, getDesign, ensureSaved, before
   backdrop.querySelector('input:checked').focus();
 
   const showQuota = (q) => {
-    $('[data-quota]').innerHTML = `${icons.gift} Diseño gratuito · ${q.remaining} de ${q.limit} exportaciones disponibles`;
+    const left = q.unlimited ? 'exportaciones ilimitadas' : `${q.remaining} de ${q.limit} exportaciones disponibles`;
+    $('[data-quota]').innerHTML = `${icons.gift} ${escapeHTML(q.plan?.name || 'Plan Gratis')} · ${left}`;
   };
   api('/designs/exports/status').then(showQuota).catch(() => {});
 
@@ -96,7 +97,9 @@ export async function openExportModal({ template, getDesign, ensureSaved, before
       btn.innerHTML = `${icons.check} Descargado`;
       setTimeout(() => { btn.innerHTML = `${icons.download} Exportar otro formato`; }, 1500);
     } catch (err) {
-      error.innerHTML = escapeHTML(err.status === 402 ? `${err.message} El plan Pro estará disponible pronto.` : err.message);
+      error.innerHTML = err.status === 402
+        ? `${escapeHTML(err.message)} <a href="/planes.html">Mejora tu plan</a> para seguir exportando.`
+        : escapeHTML(err.message);
       error.classList.remove('hidden');
       restore();
     }
